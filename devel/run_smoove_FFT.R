@@ -1,15 +1,12 @@
 # load packages
 library(travelpaths)
-library(smoove)
-# attach(getNamespace("travelpaths"))
-# library(checkmate)
+# library(smoove)
 
 # set wd as path folder
-setwd("~/travelpaths-devel/travelpaths/devel")
+setwd("~/travelpaths-devel/pkgs/travelpaths/devel")
 
 # load data
-FFT <- read.csv("../../data/FFT.csv")
-
+FFT <- read.csv("../../../data/FFT.csv")
 
 # travelpaths:::as.track_frame.data.frame
 FFT$timestamp <- as.POSIXct(FFT$timestamp) #need Posixct timestamp
@@ -71,7 +68,7 @@ if (FALSE){
   sweep_tf <- sweep_racvm(tf, windowsize = 24*60, windowstep = 60, .parallel = TRUE, time.unit = "mins") #!!!mins
   saveRDS(sweep_tf, '../../cvm/sweep_tf.rds')
 } else {
-  sweep_tf <- readRDS('../../cvm/sweep_tf.rds')
+  sweep_tf <- readRDS('../../../cvm/sweep_tf.rds')
 }
 
 str(sweep_tf)

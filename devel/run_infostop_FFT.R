@@ -1,8 +1,5 @@
 # install
-# infostop:::conda_install_infostop()
-# virtualenv_install_infostop()
-# infostop:::infostop_initialize()
-
+# infostop:::conda_install_infostop() #FIXME
 
 
 # # load packages
@@ -12,22 +9,16 @@
 
 library("infostop")
 library("trackframe")
-# library("checkmate")
-# use_virtualenv("infostop")
 
 infostop_initialize()
 
 # set wd as path folder
-setwd("~/travelpaths-devel/pkgs/infostop/devel")
+setwd("~/travelpaths-devel/pkgs/travelpaths/devel")
 
 # load data
 FFT <- read.csv("../../../data/FFT.csv")
 
-class(FFT$timestamp)
-checkmate:::check_posixct(FFT$timestamp)
 FFT$timestamp <- as.POSIXct(FFT$timestamp)
-checkmate:::check_posixct(FFT[["timestamp"]])
-
 FFT_tf <- as.track_frame(FFT,
                          index = "timestamp",
                          lon_col = "location.long",
@@ -42,7 +33,6 @@ FFT_tf_abby <- dplyr::filter(FFT_tf, individual.local.identifier == "Abby", tag.
 dim(FFT_tf_abby)
 
 tf <- FFT_tf_abby
-
 
 
 mod <- infostop(tf)
@@ -86,17 +76,12 @@ mod$compute_label_medians()
 
 labels
 
-cbind(labels, coredata.track.frame(tf))
-
 print(mod)
 
 mod$model$`_stat_coords`
-
-
 
 mod
 
 simod <- spatial_infomap(tf)
 simod$labels
-
 
