@@ -16,7 +16,7 @@ infostop_initialize()
 setwd("~/travelpaths-devel/pkgs/travelpaths/devel")
 
 # load data
-FFT <- read.csv("../../../data/FFT.csv")
+FFT <- read.csv(file.path("..", "..", "..", "data", "FFT.csv"))
 
 FFT$timestamp <- as.POSIXct(FFT$timestamp)
 FFT_tf <- as.track_frame(FFT,
