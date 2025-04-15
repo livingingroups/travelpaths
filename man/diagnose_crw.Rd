@@ -2,13 +2,13 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{diagnose_crw}
 \alias{diagnose_crw}
-\title{Title}
+\title{Autorcorrelation}
 \usage{
 diagnose_crw(tf)
 }
 \arguments{
-\item{tf}{}
+\item{tf}{an object of class \code{track_frame}}
 }
 \description{
-Title
+applies acf
 }

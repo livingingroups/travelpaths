@@ -2,33 +2,39 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{sweep_racvm}
 \alias{sweep_racvm}
-\title{Title}
+\title{Sweep RACVM}
 \usage{
 sweep_racvm(
   tf,
   windowsize = 1000,
   windowstep = 50,
   model = "UCVM",
+  progress = TRUE,
   time.unit = "mins",
   .parallel = FALSE,
   ...
 )
 }
 \arguments{
-\item{tf}{}
+\item{tf}{an object of class \code{track_frame}}
 
-\item{windowsize}{}
+\item{windowsize}{time window of analysis to scan, IMPORTANTLY: in units of time (T).}
 
-\item{windowstep}{}
+\item{windowstep}{step (in time) by which the window advances.  The smaller the step, the slower but more thorough the estimation.}
 
-\item{model}{}
+\item{model}{model to fit for the change point sweep - typically the most complex model in the candidate model set.}
 
-\item{time.unit}{}
+\item{progress}{whether or not to show a progress bar}
 
-\item{.parallel}{}
+\item{time.unit}{of the windowsize AND the windowstep. The default is "hours" - can be any of "secs", "mins", "hours", "days", "weeks" (See \code{\link[base]{difftime}}). Ignored if time is not POSIX.}
 
-\item{...}{}
+\item{.parallel}{if set TRUE, will use \code{\link[foreach]{foreach}} to parallelize the optimization.  Requires establishing the}
+
+\item{...}{additional parameters to pass to the \code{\link{estimate_racvm}} function, notably the option "criterion" allows you to select models based on AIC or BIC (the former is more liberal with more complex models).}
 }
 \description{
-Title
+Sets a window (a subset of movement data within specific time window), computes likelihoods for a set of candidate change points within the window, and steps the window forward, filling out a likelihood matrix.
+}
+\seealso{
+\code{\link{plotWindowSweep}}, \code{\link{estimate_racvm}}, \code{\link{test_cp}}
 }

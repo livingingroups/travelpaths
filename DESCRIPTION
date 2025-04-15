@@ -8,8 +8,8 @@ Authors@R: c(
     person("Katrina", "Brock", email = "kbrock@ab.mpg.de", role = "aut"))
 Description: More about what it does (maybe more than one line).
 License: GPL (>= 2)
-Imports: checkmate, sf
+Imports: checkmate, sf, smoove, gplots, scales
 Depends: R (>= 4.0.0), zoo, trackframe
-Suggests: tinytest, infostop, smoove
+Suggests: tinytest, infostop, 
 Encoding: UTF-8
 RoxygenNote: 7.3.2

@@ -2,17 +2,49 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{estimate_racvm}
 \alias{estimate_racvm}
-\title{Title}
+\title{Estimate RACVM parameters}
 \usage{
-estimate_racvm(tf, time.units = "min", ...)
+estimate_racvm(
+  tf,
+  model = "RACVM",
+  compare.models = TRUE,
+  modelset = c("UCVM", "ACVM", "RCVM", "RACVM"),
+  p0 = NULL,
+  spline = FALSE,
+  spline.res = 0.01,
+  T.spline = NULL,
+  time.units = "min",
+  verbose = FALSE
+)
 }
 \arguments{
-\item{tf}{}
+\item{tf}{an object of class \code{track_frame}}
 
-\item{time.units}{}
+\item{model}{one of UCVM, RCVM, ACVM or RACVM.}
 
-\item{...}{}
+\item{compare.models}{whether to compare four models: with both rotation and advection, only rotation, only advection, or neither.  The comparison provides a table with the log likelihood, number of parameters, AIC, BIC, delta AIC and delta BIC values.  A limited comparison set may be useful when running the fit many times (e.g. when performing change point analysis).}
+
+\item{modelset}{which models to fit and compare (if \code{compare.models}) is TRUE)}
+
+\item{p0}{optional named list of initial parameter values in the form: c(tau, eta, omega, mu.x, mu.y).}
+
+\item{spline}{whether to implement the spline correction on the positions}
+
+\item{spline.res}{resolution of spline (see \code{\link[smoove]{getV.spline}})}
+
+\item{T.spline}{new times for spline estimation (best left as NULL)}
+
+\item{time.units}{time units of calculations (e.g. "sec", "min", "hour", "day")}
+
+\item{verbose}{whether to output verbose message. defaults to FALSE#'}
 }
 \description{
-Title
+Estimate rotational-advectice correlated velocity movement model
+}
+\details{
+This group of functions estimate the parameters of a rotational and advective CVM using a one-step velocity likelihood.  It is best implemented on relatively high resolution data from which one can obtain good estimates of velocity.  The observations can, however, be irregularly sampled.  
+
+The parameterization is: \eqn{\tau} - characteristic time scale, \eqn{\mu} - advective velocity, \eqn{\eta} - random rms speed, \eqn{\omega} - angular speed. 
+
+The \code{fitRACVM} function is an (internal) helper function.
 }
