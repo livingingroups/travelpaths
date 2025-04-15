@@ -3,6 +3,7 @@
 export(diagnose_crw)
 export(estimate_racvm)
 export(estimate_ucvm)
+export(find_single_break_point)
 export(sweep_racvm)
 export(test_cp)
 export(w_plotPhaseList)

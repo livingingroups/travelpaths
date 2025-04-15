@@ -12,6 +12,7 @@ test_cp(
   modelset = "all",
   spline = FALSE,
   criterion = "BIC",
+  time.units = "min",
   ...
 )
 }
@@ -30,8 +31,14 @@ test_cp(
 
 \item{criterion}{selection criterion - either BIC or AIC (can be upper- or lowercased)}
 
+\item{time.units}{time units of calculations (e.g. "sec", "min", "hour", "day")}
+
 \item{...}{further params to \code{getFit} internal function}
 }
 \description{
 Identifies appropriate models on either side of a change point
+}
+\examples{
+tf <- sim_travel_path(100, format = "track_frame")
+test_cp(tf, 50, 1, 100)
 }

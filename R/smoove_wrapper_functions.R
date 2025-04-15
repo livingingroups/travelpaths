@@ -169,19 +169,60 @@ sweep_racvm <- function(tf, windowsize = 1000, windowstep = 50, model='UCVM', pr
 #' @param modelset set of models to compare (combination of UCVM, ACVM, RCVM, RACVM, or \code{all}, which includes all of them)
 #' @param spline whether or not to use the spline approximation for the final estimate. 
 #' @param criterion selection criterion - either BIC or AIC (can be upper- or lowercased)
+#' @param time.units time units of calculations (e.g. "sec", "min", "hour", "day")
 #' @param ... further params to \code{getFit} internal function
-# #' @example ./demo/testCP_example.R
+#' @examples
+#' tf <- sim_travel_path(100, format = "track_frame")
+#' test_cp(tf, 50, 1, 100)
 #' @export
-test_cp <- function(tf, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", ...){
+test_cp <- function(tf, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", time.units = "min", ...){
   checkmate::assert_class(tf, classes = "track_frame")
   smoove::testCP(
-    Z = cbind(longitude(tf), latitude(tf)), #T = index(tf),
-    T = as.POSIXct(index(tf)),
+    Z = longitude(tf) + 1i* latitude(tf), #Z = cbind(longitude(tf), latitude(tf)), #T = index(tf),
+    T = as.numeric(difftime(index(tf), index(tf)[1], units = time.units)),#as.POSIXct(index(tf)),
     cp = cp,
     start = start,
     end = end,
     modelset = modelset,
     spline = spline,
     criterion = criterion,
+    ...)
+}
+
+
+
+#' Find single change point
+#' 
+#' Finds a single change point in UCVM parameters (time scale \eqn{tau} and rms 
+#' speed \eqn{eta}) of a movement.  
+#' 
+#' @details Two methods are provided: "sweep", which scans a set of possible 
+#' change points, smooths the likelihoods and selects the maximum, or "optimize" 
+#' which uses R's single dimension optimization algorithms to find the most 
+#' likely change point. The latter is faster, but can be unreliable because the 
+#' likelihood profiles are typically quite rough.  
+#' 
+#' 
+#' @param tf an object of class \code{track_frame}
+#' @param k tuning parameter for the smoothing of the likelihood profile spline. 
+#' The number of knots is "length(T)/4 * k" - the lower the value of k, the smoother the spline. 
+#' @param method one of "sweep" or "optimize". See details. 
+#' @param plotme whether to plot the resulting likelihood (only if method is "sweep"). 
+#' @param time.units time units of calculations (e.g. "sec", "min", "hour", "day")
+#' @param ... additional parameters to pass to \code{\link{estimateUCVM}} function, in particular the method of estimation.  Under most conditions, fairly reliable and fast results are provided by the default \code{vLike} (velocity likelihood) method. 
+#' 
+#' @examples
+#' tf <- sim_travel_path(100, format = "track_frame")
+#' find_single_break_point(tf, method = "sweep")
+#' find_single_break_point(tf, method = "optimize")
+#' @export
+find_single_break_point <- function(tf, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...){
+  checkmate::assert_class(tf, classes = "track_frame")
+  smoove::findSingleBreakPoint(
+    Z = longitude(tf) + 1i* latitude(tf), #cbind(longitude(tf), latitude(tf)), #T = index(tf),
+    T = as.numeric(difftime(index(tf), index(tf)[1], units = time.units)),#.as.integer(index(tf)),
+    k = k,
+    method = method,
+    plotme = plotme,
     ...)
 }
