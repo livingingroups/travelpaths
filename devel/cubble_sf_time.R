@@ -35,6 +35,7 @@ attributes(ts_long)
 #
 # install.packages("sftime")
 library("sftime")
+library("dplyr")
 # Ist wie sftrack nur dass es kein group_col argument welches den identifier
 # des individums angibt.
 climate_aus <- cubble::climate_aus
@@ -57,6 +58,7 @@ glimpse(attributes(climate_aus_sftime), width = 120)
 #
 # convert sftrack
 #
+# install.packages('sftrack')
 library("sftrack")
 
 data("raccoon")
@@ -111,7 +113,6 @@ attr(m5, "track_data")
 # tsibble
 #
 # install.packages("nycflights13")
-library("dplyr")
 library("tsibble")
 weather <- nycflights13::weather %>% 
   select(origin, time_hour, temp, humid, precip)
@@ -142,6 +143,7 @@ str(attributes(weather_tsbl))
 # trajectories
 #
 # options(timeout = Inf)
+# install.packages('trajectories')
 # install.packages("taxidata", repos = "https://cran.uni-muenster.de/pebesma", type = "source")
 library("trajectories")
 library("taxidata")
