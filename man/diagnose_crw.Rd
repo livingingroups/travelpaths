@@ -4,10 +4,10 @@
 \alias{diagnose_crw}
 \title{Autorcorrelation}
 \usage{
-diagnose_crw(tf)
+diagnose_crw(data)
 }
 \arguments{
-\item{tf}{an object of class \code{track_frame}}
+\item{data}{an object coercible to class \code{track_frame}}
 }
 \description{
 applies acf

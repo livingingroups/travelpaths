@@ -11,10 +11,10 @@ FFT <- read.csv(file.path("..", "..", "..", "data", "FFT.csv"))
 # travelpaths:::as.track_frame.data.frame
 FFT$timestamp <- as.POSIXct(FFT$timestamp) #need Posixct timestamp
 FFT_tf <- as.track_frame(FFT,
-                         index = "timestamp",
-                         lon_col = "location.long", #"utm.easting",
-                         lat_col = "location.lat", #"utm.northing",
-                         id_cols = c("individual.local.identifier", "tag.local.identifier") # id_col = "individual.local.identifier"
+                         time_col  = "timestamp",
+                         easting_col = "utm.easting",
+                         northing_col = "utm.northing",
+                         id_col = "individual.local.identifier"
 )
 
 str(FFT_tf)
@@ -30,16 +30,17 @@ tf <- FFT_tf_abby
 class(tf)
 
 head(index(tf))
-head(latitude(tf))
-head(longitude(tf))
+head(easting(tf))
+head(northing(tf))
 
 # smoove::estimateUCVM
 # works - important to set time.units = "min"
 # "vaf", "crw" only works with equidistant time points - resampling does not work for FFT data
 # we use only "vLike" and "crawl"
-fit_vLike <- estimate_ucvm(tf = FFT_tf_abby,  method = "vLike", time.units = "min")
-fit_crawl <- estimate_ucvm(tf = FFT_tf_abby,  method = "crawl", time.units = "min")
-# fit_zLike <- estimate_ucvm(tf = FFT_tf_abby,  method = "zLike", time.units = "min") #very slow
+fit_vLike <- estimate_ucvm(data = FFT_tf_abby,  method = "vLike", time.units = "min")
+set.seed(2025) #does not work for every seed
+fit_crawl <- estimate_ucvm(data = FFT_tf_abby,  method = "crawl", time.units = "min") 
+# fit_zLike <- estimate_ucvm(data = FFT_tf_abby,  method = "zLike", time.units = "min") #very slow
 fit_vLike
 fit_crawl
 # fit_zLike
@@ -50,7 +51,7 @@ diagnose_crw(tf)
 
 
 # smoove::estimateRACVM
-fit_racvm <- estimate_racvm(tf = FFT_tf_abby, time.units = "min")
+fit_racvm <- estimate_racvm(data = FFT_tf_abby, time.units = "min")
 fit_racvm
 
 
@@ -65,7 +66,7 @@ if (FALSE){
   require(doParallel)
   cl <- makeCluster(detectCores()-4)
   registerDoParallel(cl)
-  sweep_tf <- sweep_racvm(tf, windowsize = 24*60, windowstep = 60, .parallel = TRUE, time.unit = "mins") #!!!mins
+  sweep_tf <- sweep_racvm(data = tf, windowsize = 24*60, windowstep = 60, .parallel = TRUE, time.unit = "mins") #!!!mins
   saveRDS(sweep_tf, '../../cvm/sweep_tf.rds')
 } else {
   sweep_tf <- readRDS('../../../cvm/sweep_tf.rds')
@@ -115,7 +116,7 @@ w_plotPhaseList(phase_list, parameters = c('eta', 'tau'))
 
 # zoom in on different phases
 w_plotPhaseList(
-  subset_phase_list(phase_list, 2, 3),
+  travelpaths:::subset_phase_list(phase_list, 2, 3),
   parameters = c('eta', 'tau')
 )
 

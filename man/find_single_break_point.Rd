@@ -5,7 +5,7 @@
 \title{Find single change point}
 \usage{
 find_single_break_point(
-  tf,
+  data,
   k = 1,
   method = "sweep",
   plotme = TRUE,
@@ -14,7 +14,7 @@ find_single_break_point(
 )
 }
 \arguments{
-\item{tf}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{track_frame}}
 
 \item{k}{tuning parameter for the smoothing of the likelihood profile spline. 
 The number of knots is "length(T)/4 * k" - the lower the value of k, the smoother the spline.}

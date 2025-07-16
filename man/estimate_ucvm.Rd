@@ -5,7 +5,7 @@
 \title{Estimating parameters of unbiased CVM}
 \usage{
 estimate_ucvm(
-  tf,
+  data,
   method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
   parameters = c("tau", "nu"),
   time.units = "min",
@@ -16,7 +16,7 @@ estimate_ucvm(
 )
 }
 \arguments{
-\item{tf}{an object of class \code{track_frame}}
+\item{data}{an object coercible to class \code{track_frame}}
 
 \item{method}{the method to use for the estimation.  These are (in increasing : velocity auto-correlation fitting (\code{vaf}), correlated 
 random walk matching (\code{crw}), velocity likelihood (\code{vLike}), position likelihood (\code{zLike}) and position likelihood with Kalman 

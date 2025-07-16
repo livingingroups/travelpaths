@@ -5,7 +5,7 @@
 \title{Sweep RACVM}
 \usage{
 sweep_racvm(
-  tf,
+  data,
   windowsize = 1000,
   windowstep = 50,
   model = "UCVM",
@@ -16,7 +16,7 @@ sweep_racvm(
 )
 }
 \arguments{
-\item{tf}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{track_frame}}
 
 \item{windowsize}{time window of analysis to scan, IMPORTANTLY: in units of time (T).}
 

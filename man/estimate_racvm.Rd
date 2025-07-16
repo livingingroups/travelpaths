@@ -5,7 +5,7 @@
 \title{Estimate RACVM parameters}
 \usage{
 estimate_racvm(
-  tf,
+  data,
   model = "RACVM",
   compare.models = TRUE,
   modelset = c("UCVM", "ACVM", "RCVM", "RACVM"),
@@ -18,7 +18,7 @@ estimate_racvm(
 )
 }
 \arguments{
-\item{tf}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{track_frame}}
 
 \item{model}{one of UCVM, RCVM, ACVM or RACVM.}
 

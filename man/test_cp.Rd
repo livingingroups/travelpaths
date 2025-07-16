@@ -5,7 +5,7 @@
 \title{Test RACVM change point}
 \usage{
 test_cp(
-  tf,
+  data,
   cp,
   start,
   end,
@@ -17,7 +17,7 @@ test_cp(
 )
 }
 \arguments{
-\item{tf}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{track_frame}}
 
 \item{cp}{change point}
 
