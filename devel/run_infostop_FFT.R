@@ -19,35 +19,61 @@ setwd("~/travelpaths-devel/pkgs/travelpaths/devel")
 FFT <- read.csv(file.path("..", "..", "..", "data", "FFT.csv"))
 
 FFT$timestamp <- as.POSIXct(FFT$timestamp)
+FFT_tf_lon_lat <- as.track_frame(FFT,
+                         time_col  = "timestamp",
+                         easting_col = "location.lat", #"utm.easting",
+                         northing_col = "location.long",#"utm.northing",
+                         id_col = "individual.local.identifier"
+)
+
 FFT_tf <- as.track_frame(FFT,
-                         index = "timestamp",
-                         lon_col = "location.long",
-                         lat_col = "location.lat",
-                         id_col = c("individual.local.identifier", "tag.local.identifier")
+                         time_col  = "timestamp",
+                         easting_col = "utm.easting", #"utm.easting",
+                         northing_col = "utm.northing",#"utm.northing",
+                         id_col = "individual.local.identifier"
 )
 class(FFT_tf$timestamp)
 
 # FFT_tf_abby <- select_id(tf = FFT_tf, id = "Abby")
 FFT_tf_abby <- dplyr::filter(FFT_tf, individual.local.identifier == "Abby", tag.local.identifier == 4652)
+FFT_tf_abby_lon_lat <- dplyr::filter(FFT_tf_lon_lat, individual.local.identifier == "Abby", tag.local.identifier == 4652)
 # FFT_tf_abby <- select_id(tf = FFT_tf, id = c("Abby", "4652"))
 dim(FFT_tf_abby)
 
 tf <- FFT_tf_abby
+tf_lon_lat <- FFT_tf_abby_lon_lat
 
+# onestep
+mod_lon_lat <- infostop(tf_lon_lat, distance_metric = "haversine")
+mod <- infostop(tf, distance_metric = "euclidean")
+mod
 
-mod <- infostop(tf)
+# twostep
+stops <- find_stops(tf_lon_lat, r1 = 10, min_staying_time = 300L, max_time_between = 86400L, distance_metric = "haversine")
+twostep <- spatial_infomap(stops[['coordinates']], r2 = 10, distance_metric = "haversine")
+
+stops <- find_stops(tf, r1 = 10, min_staying_time = 300L, max_time_between = 86400L, distance_metric = "euclidean")
+twostep <- spatial_infomap(stops[['coordinates']], r2 = 10, distance_metric = "euclidean")
 
 mod$compute_label_medians()
 
+
+stops$compute_label_medians()
+
 # map <- plot_map(mod)
-map <- plot_map(mod, 
+map <- plot_map(mod,  # only available for distance "haversine" (lonlat)
+                scatter = TRUE, 
+                polygons_color = "#ff0000", 
+                zoom_start = 15)
+
+map <- plot_map(mod_lon_lat, 
                 scatter = TRUE, 
                 polygons_color = "#ff0000", 
                 zoom_start = 15)
 
 ## Not run: 
 # map$show_in_browser()
-map$save("map.html")
+map$save("map_lon_lat.html")
 
 
 #TODO write accessor functions
@@ -80,8 +106,15 @@ print(mod)
 
 mod$model$`_stat_coords`
 
+
 mod
 
-simod <- spatial_infomap(tf)
+attributes(tf_lon_lat)
+simod <- spatial_infomap(tf_lon_lat, distance_metric = "haversine")
+simod <- spatial_infomap(tf, distance_metric = "euclidean")
 simod$labels
 
+
+length(mod$labels)
+intervals <- compute_intervals(mod$labels, as.integer(time(tf)))
+intervals
