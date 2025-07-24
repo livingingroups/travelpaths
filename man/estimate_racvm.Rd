@@ -2,9 +2,65 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{estimate_racvm}
 \alias{estimate_racvm}
+\alias{estimate_racvm.track_frame}
+\alias{estimate_racvm.data.frame}
+\alias{estimate_racvm.move2}
+\alias{estimate_racvm.sftrack}
 \title{Estimate RACVM parameters}
 \usage{
 estimate_racvm(
+  data,
+  model = "RACVM",
+  compare.models = TRUE,
+  modelset = c("UCVM", "ACVM", "RCVM", "RACVM"),
+  p0 = NULL,
+  spline = FALSE,
+  spline.res = 0.01,
+  T.spline = NULL,
+  time.units = "min",
+  verbose = FALSE
+)
+
+\method{estimate_racvm}{track_frame}(
+  data,
+  model = "RACVM",
+  compare.models = TRUE,
+  modelset = c("UCVM", "ACVM", "RCVM", "RACVM"),
+  p0 = NULL,
+  spline = FALSE,
+  spline.res = 0.01,
+  T.spline = NULL,
+  time.units = "min",
+  verbose = FALSE
+)
+
+\method{estimate_racvm}{data.frame}(
+  data,
+  model = "RACVM",
+  compare.models = TRUE,
+  modelset = c("UCVM", "ACVM", "RCVM", "RACVM"),
+  p0 = NULL,
+  spline = FALSE,
+  spline.res = 0.01,
+  T.spline = NULL,
+  time.units = "min",
+  verbose = FALSE
+)
+
+\method{estimate_racvm}{move2}(
+  data,
+  model = "RACVM",
+  compare.models = TRUE,
+  modelset = c("UCVM", "ACVM", "RCVM", "RACVM"),
+  p0 = NULL,
+  spline = FALSE,
+  spline.res = 0.01,
+  T.spline = NULL,
+  time.units = "min",
+  verbose = FALSE
+)
+
+\method{estimate_racvm}{sftrack}(
   data,
   model = "RACVM",
   compare.models = TRUE,

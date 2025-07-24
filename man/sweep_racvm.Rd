@@ -2,9 +2,57 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{sweep_racvm}
 \alias{sweep_racvm}
+\alias{sweep_racvm.track_frame}
+\alias{sweep_racvm.data.frame}
+\alias{sweep_racvm.move2}
+\alias{sweep_racvm.sftrack}
 \title{Sweep RACVM}
 \usage{
 sweep_racvm(
+  data,
+  windowsize = 1000,
+  windowstep = 50,
+  model = "UCVM",
+  progress = TRUE,
+  time.unit = "mins",
+  .parallel = FALSE,
+  ...
+)
+
+\method{sweep_racvm}{track_frame}(
+  data,
+  windowsize = 1000,
+  windowstep = 50,
+  model = "UCVM",
+  progress = TRUE,
+  time.unit = "mins",
+  .parallel = FALSE,
+  ...
+)
+
+\method{sweep_racvm}{data.frame}(
+  data,
+  windowsize = 1000,
+  windowstep = 50,
+  model = "UCVM",
+  progress = TRUE,
+  time.unit = "mins",
+  .parallel = FALSE,
+  ...
+)
+
+\method{sweep_racvm}{move2}(
+  data,
+  windowsize = 1000,
+  windowstep = 50,
+  model = "UCVM",
+  progress = TRUE,
+  time.unit = "mins",
+  .parallel = FALSE,
+  ...
+)
+
+\method{sweep_racvm}{sftrack}(
   data,
   windowsize = 1000,
   windowstep = 50,

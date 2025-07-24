@@ -1,7 +1,7 @@
 #' Generate Random Travel Path
 #'
 #' This function generates a random travel path with coordinates (easting/northing for format track_frame and latitude/longitude else) and time values.
-#' The path can include stationary periods and movements with configurable parameters. The following output formats are supported: \code{track_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, "\code{sftrack"} or \code{"move2"}.
+#' The path can include stationary periods and movements with configurable parameters. The following output formats are supported: \code{"track\_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #'
 #' @param size An integer giving the number of points to generate in the path.
 #' @param max_step A numeric giving the maximum step size in degrees for each movement. Default is 0.001.
@@ -9,7 +9,7 @@
 #' @param start_location A numeric vector giving the starting location as c(latitude, longitude). Default is Vienna (48.2083537, 16.3725042).
 #' @param start_time A POSIXct giving the starting time for the path. Default is current time.
 #' @param stay_prob A numeric giving the probability of staying at the same location (0-1). Default is 0.2.
-#' @param format A character string, either \code{track_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, "\code{sftrack"} or \code{"move2"}.
+#' @param format A character string, either \code{"track\_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #'
 #' @return Depending on the format argument either a \code{"track\_frame"} or
 #'  \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.
@@ -38,8 +38,8 @@ sim_travel_path <- function(size,
   )
   
   path$time[1] <- start_time
-  path$latitude[1] <- start_location[2]
-  path$longitude[1] <- start_location[1]
+  path$latitude[1] <- start_location[1]
+  path$longitude[1] <- start_location[2]
 
   
   for (i in 2:size) {
@@ -110,7 +110,7 @@ sim_travel_path <- function(size,
 #'
 #' This function creates multiple random travel paths and combines them into a single object. 
 #' Each path is assigned coordinates (easting/northing for format track_frame and latitude/longitude else) and time values and a unique track ID.
-#' Each path can include stationary periods and movements with configurable parameters. The following output formats are supported: \code{track_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, "\code{sftrack"} or \code{"move2"}.
+#' Each path can include stationary periods and movements with configurable parameters. The following output formats are supported: \code{"track\_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #' 
 #'
 #' @param ntracks An integer specifying the number of tracks to generate.
@@ -126,7 +126,7 @@ sim_travel_path <- function(size,
 #'   Default is 0.2.
 #' @param track_prefix A character string used as a prefix for track IDs. Default is "track".
 #'   Track IDs will be formatted as \code{prefix\_number}.
-#' @param format A character string, either \code{track_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, "\code{sftrack"} or \code{"move2"}.
+#' @param format A character string, either \code{"track\_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #'
 #' @return Depending on the format argument either a \code{"track\_frame"} or
 #'  \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.

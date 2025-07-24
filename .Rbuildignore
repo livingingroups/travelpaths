@@ -4,3 +4,4 @@ Taskfile.yml
 ^devel$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^work$

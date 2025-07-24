@@ -2,9 +2,49 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{find_single_break_point}
 \alias{find_single_break_point}
+\alias{find_single_break_point.track_frame}
+\alias{find_single_break_point.data.frame}
+\alias{find_single_break_point.move2}
+\alias{find_single_break_point.sftrack}
 \title{Find single change point}
 \usage{
 find_single_break_point(
+  data,
+  k = 1,
+  method = "sweep",
+  plotme = TRUE,
+  time.units = "min",
+  ...
+)
+
+\method{find_single_break_point}{track_frame}(
+  data,
+  k = 1,
+  method = "sweep",
+  plotme = TRUE,
+  time.units = "min",
+  ...
+)
+
+\method{find_single_break_point}{data.frame}(
+  data,
+  k = 1,
+  method = "sweep",
+  plotme = TRUE,
+  time.units = "min",
+  ...
+)
+
+\method{find_single_break_point}{move2}(
+  data,
+  k = 1,
+  method = "sweep",
+  plotme = TRUE,
+  time.units = "min",
+  ...
+)
+
+\method{find_single_break_point}{sftrack}(
   data,
   k = 1,
   method = "sweep",
@@ -39,7 +79,8 @@ likely change point. The latter is faster, but can be unreliable because the
 likelihood profiles are typically quite rough.
 }
 \examples{
-tf <- sim_travel_path(100, format = "track_frame")
+set.seed(2025)
+tf <- sim_travel_path(50, format = "track_frame")
 find_single_break_point(tf, method = "sweep")
 find_single_break_point(tf, method = "optimize")
 }

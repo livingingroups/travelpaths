@@ -2,6 +2,10 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{estimate_ucvm}
 \alias{estimate_ucvm}
+\alias{estimate_ucvm.track_frame}
+\alias{estimate_ucvm.data.frame}
+\alias{estimate_ucvm.move2}
+\alias{estimate_ucvm.sftrack}
 \title{Estimating parameters of unbiased CVM}
 \usage{
 estimate_ucvm(
@@ -9,7 +13,51 @@ estimate_ucvm(
   method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
   parameters = c("tau", "nu"),
   time.units = "min",
-  CI = TRUE,
+  CI = FALSE,
+  spline = FALSE,
+  diagnose = TRUE,
+  ...
+)
+
+\method{estimate_ucvm}{track_frame}(
+  data,
+  method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
+  parameters = c("tau", "nu"),
+  time.units = "min",
+  CI = FALSE,
+  spline = FALSE,
+  diagnose = TRUE,
+  ...
+)
+
+\method{estimate_ucvm}{data.frame}(
+  data,
+  method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
+  parameters = c("tau", "nu"),
+  time.units = "min",
+  CI = FALSE,
+  spline = FALSE,
+  diagnose = TRUE,
+  ...
+)
+
+\method{estimate_ucvm}{move2}(
+  data,
+  method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
+  parameters = c("tau", "nu"),
+  time.units = "min",
+  CI = FALSE,
+  spline = FALSE,
+  diagnose = TRUE,
+  ...
+)
+
+\method{estimate_ucvm}{sftrack}(
+  data,
+  method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
+  parameters = c("tau", "nu"),
+  time.units = "min",
+  CI = FALSE,
   spline = FALSE,
   diagnose = TRUE,
   ...

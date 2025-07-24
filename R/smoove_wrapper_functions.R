@@ -21,31 +21,32 @@
 #' @return A data frame with point estimates of mean speed `nu' and time-scale `tau' 
 # #' @example demo/estimateUCVM_examples.R
 #' @export
+#' @rdname estimate_ucvm
 estimate_ucvm <- function(data,
                           method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
                           parameters = c("tau", "nu"),
                           time.units = "min",
-                          CI = TRUE,
+                          CI = FALSE,
                           spline = FALSE,
                           diagnose = TRUE,
                           ...) {
 UseMethod("estimate_ucvm")
 }
 
-#' @noRd
 #' @export
+#' @rdname estimate_ucvm
 estimate_ucvm.track_frame <- function(data,
                           method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
                           parameters = c("tau", "nu"),
                           time.units = "min",
-                          CI = TRUE,
+                          CI = FALSE,
                           spline = FALSE,
                           diagnose = TRUE,
                           ...) {
   # checkmate::assert_class(data, classes = "track_frame")
   fit <- smoove::estimateUCVM(
     Z = cbind(easting(data), northing(data)),
-    T = as.POSIXct(index(data)), #FIXME check as.POSIXct in Trackframe?
+    T = as.POSIXct(time(data)), #FIXME check as.POSIXct in Trackframe?
     method = method,
     parameters = parameters,
     time.units = time.units,
@@ -57,13 +58,13 @@ estimate_ucvm.track_frame <- function(data,
 }
 
 
-#' @noRd
 #' @export
+#' @rdname estimate_ucvm
 estimate_ucvm.data.frame <- function(data,
                                      method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
                                      parameters = c("tau", "nu"),
                                      time.units = "min",
-                                     CI = TRUE,
+                                     CI = FALSE,
                                      spline = FALSE,
                                      diagnose = TRUE,
                                          ...) {
@@ -72,13 +73,13 @@ estimate_ucvm.data.frame <- function(data,
 }
 
 
-#' @noRd
 #' @export
+#' @rdname estimate_ucvm
 estimate_ucvm.move2 <- estimate_ucvm.data.frame
 
 
-#' @noRd
 #' @export
+#' @rdname estimate_ucvm
 estimate_ucvm.sftrack <- estimate_ucvm.data.frame
 
 #' Autorcorrelation
@@ -88,13 +89,13 @@ estimate_ucvm.sftrack <- estimate_ucvm.data.frame
 #' @param data an object coercible to class \code{track_frame}
 #'
 #' @export
-# #' @examples
+#' @rdname diagnose_crw
 diagnose_crw <- function(data){
-  UseMethod("estimate_ucvm")
+  UseMethod("diagnose_crw")
 }
 
-#' @noRd
 #' @export
+#' @rdname diagnose_crw
 diagnose_crw.track_frame <- function(data) {
   checkmate::assert_class(data, classes = "track_frame")
   # smoove:::DiagnoseCRW(cbind(easting(data), northing(data)))
@@ -119,20 +120,20 @@ diagnose_crw.track_frame <- function(data) {
   title("Autocorrelations should be near 0 at lag>0", outer=TRUE, font=2)
 }
 
-#' @noRd
 #' @export
+#' @rdname diagnose_crw
 diagnose_crw.data.frame <- function(data) {
   diagnose_crw.track_frame(as.track_frame(data))
 }
 
 
-#' @noRd
 #' @export
+#' @rdname diagnose_crw
 diagnose_crw.move2 <- diagnose_crw.data.frame
 
 
-#' @noRd
 #' @export
+#' @rdname diagnose_crw
 diagnose_crw.sftrack <- diagnose_crw.data.frame
 
 
@@ -158,6 +159,7 @@ diagnose_crw.sftrack <- diagnose_crw.data.frame
 #' @param verbose whether to output verbose message. defaults to FALSE#'
 # #' @example demo/estimateRACVM_examples.R
 #' @export
+#' @rdname estimate_racvm
 estimate_racvm <- function(data,
                             model = "RACVM", 
                             compare.models = TRUE, 
@@ -171,8 +173,8 @@ estimate_racvm <- function(data,
   UseMethod("estimate_racvm")
 }
 
-#' @noRd
 #' @export
+#' @rdname estimate_racvm
 estimate_racvm.track_frame <- function(data,
                                        model = "RACVM", 
                                        compare.models = TRUE, 
@@ -185,8 +187,8 @@ estimate_racvm.track_frame <- function(data,
                                        verbose = FALSE) {
   checkmate::assert_class(data, classes = "track_frame")
   fit <- smoove::estimateRACVM(
-    Z = cbind(easting(data), northing(data)), #T = index(data),
-    T = as.POSIXct(index(data)),
+    Z = cbind(easting(data), northing(data)), #T = time(data),
+    T = as.POSIXct(time(data)),
     model = model,
     compare.models = compare.models,
     modelset = modelset,
@@ -200,8 +202,8 @@ estimate_racvm.track_frame <- function(data,
 }
 
 
-#' @noRd
 #' @export
+#' @rdname estimate_racvm
 estimate_racvm.data.frame <- function(data,
                                      model = "RACVM", 
                                      compare.models = TRUE, 
@@ -213,18 +215,18 @@ estimate_racvm.data.frame <- function(data,
                                      time.units = "min",
                                      verbose = FALSE) {
   estimate_racvm.track_frame(as.track_frame(data), model= model, compare.models = compare.models,
-                            modelset = modelset, p0 = p0, slpine = spline, spline.res = spline.res,
+                            modelset = modelset, p0 = p0, spline = spline, spline.res = spline.res,
                             T.spline = T.spline, time.units = time.units, verbose = verbose)
 }
 
 
-#' @noRd
 #' @export
+#' @rdname estimate_racvm
 estimate_racvm.move2 <- estimate_racvm.data.frame
 
 
-#' @noRd
 #' @export
+#' @rdname estimate_racvm
 estimate_racvm.sftrack <- estimate_racvm.data.frame
 
 
@@ -246,17 +248,18 @@ estimate_racvm.sftrack <- estimate_racvm.data.frame
 #' @seealso \code{\link{plotWindowSweep}}, \code{\link{estimate_racvm}}, \code{\link{test_cp}}
 # #' @example demo/sweepRACVM_examples.R
 #' @export
+#' @rdname sweep_racvm
 sweep_racvm <- function(data, windowsize = 1000, windowstep = 50, model='UCVM', progress = TRUE, time.unit = "mins", .parallel = FALSE, ...) {
   UseMethod("sweep_racvm")
 }
 
-#' @noRd
 #' @export
+#' @rdname sweep_racvm
 sweep_racvm.track_frame <- function(data, windowsize = 1000, windowstep = 50, model='UCVM', progress = TRUE, time.unit = "mins", .parallel = FALSE, ...){
   checkmate::assert_class(data, classes = "track_frame")
   smoove::sweepRACVM(
-    Z = cbind(easting(data), northing(data)), #T = index(data),
-    T = as.POSIXct(index(data)),
+    Z = cbind(easting(data), northing(data)),
+    T = as.POSIXct(time(data)),
     windowsize = windowsize,
     windowstep = windowstep,
     model = model,
@@ -266,21 +269,21 @@ sweep_racvm.track_frame <- function(data, windowsize = 1000, windowstep = 50, mo
 }
 
 
-#' @noRd
 #' @export
+#' @rdname sweep_racvm
 sweep_racvm.data.frame <- function(data, windowsize = 1000, windowstep = 50, model='UCVM', progress = TRUE, time.unit = "mins", .parallel = FALSE, ...) {
   sweep_racvm.track_frame(as.track_frame(data), windowsize = windowsize, windowstep = windowstep,
                           model = model, progress = progress, time.unit = time.unit, .parallel = .parallel, ...)
 }
 
 
-#' @noRd
 #' @export
+#' @rdname sweep_racvm
 sweep_racvm.move2 <- sweep_racvm.data.frame
 
 
-#' @noRd
 #' @export
+#' @rdname sweep_racvm
 sweep_racvm.sftrack <- sweep_racvm.data.frame
 
 
@@ -298,20 +301,21 @@ sweep_racvm.sftrack <- sweep_racvm.data.frame
 #' @param time.units time units of calculations (e.g. "sec", "min", "hour", "day")
 #' @param ... further params to \code{getFit} internal function
 #' @examples
-#' tf <- sim_travel_path(100, format = "track_frame")
-#' test_cp(tf, 50, 1, 100)
+#' tf <- sim_travel_path(1000, format = "track_frame")
+#' test_cp(tf, 10, 1, 100)
 #' @export
+#' @rdname test_cp
 test_cp <- function(data, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", time.units = "min", ...) { #FIXME: min vs mins
   UseMethod("test_cp")
 }
 
-#' @noRd
 #' @export
+#' @rdname test_cp
 test_cp.track_frame <- function(data, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", time.units = "min", ...){
   checkmate::assert_class(data, classes = "track_frame")
   smoove::testCP(
-    Z = easting(data) + 1i* northing(data), #Z = cbind(easting(data), northing(data)), #T = index(data),
-    T = as.numeric(difftime(index(data), index(data)[1], units = time.units)),#as.POSIXct(index(data)),
+    Z = easting(data) + 1i* northing(data), #Z = cbind(easting(data), northing(data)), #T = time(data),
+    T = as.numeric(difftime(time(data), time(data)[1], units = time.units)),#as.POSIXct(time(data)),
     cp = cp,
     start = start,
     end = end,
@@ -322,21 +326,21 @@ test_cp.track_frame <- function(data, cp, start, end, modelset = "all", spline =
 }
 
 
-#' @noRd
 #' @export
+#' @rdname test_cp
 test_cp.data.frame <- function(data, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", time.units = "min", ...) {
   test_cp.track_frame(as.track_frame(data), cp = cp, start = start, end = end,
                       modelset = modelset, spline = spline, criterion = criterion, time.units = time.units, ...)
 }
 
 
-#' @noRd
 #' @export
+#' @rdname test_cp
 test_cp.move2 <- test_cp.data.frame
 
 
-#' @noRd
 #' @export
+#' @rdname test_cp
 test_cp.sftrack <- test_cp.data.frame
 
 
@@ -361,22 +365,25 @@ test_cp.sftrack <- test_cp.data.frame
 #' @param ... additional parameters to pass to \code{\link{estimateUCVM}} function, in particular the method of estimation.  Under most conditions, fairly reliable and fast results are provided by the default \code{vLike} (velocity likelihood) method. 
 #' 
 #' @examples
-#' tf <- sim_travel_path(100, format = "track_frame")
+#' set.seed(2025)
+#' tf <- sim_travel_path(50, format = "track_frame")
 #' find_single_break_point(tf, method = "sweep")
 #' find_single_break_point(tf, method = "optimize")
 #' @export
+#' @rdname find_single_break_point
 find_single_break_point <- function(data, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...) { #FIXME: min vs mins
   UseMethod("find_single_break_point")
 }
 
 
-#' @noRd
 #' @export
-find_single_break_point <- function(data, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...){
+#' @rdname find_single_break_point
+find_single_break_point.track_frame <- function(data, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...){
+  #FIXME: good idea to always transform to track_frame
   checkmate::assert_class(data, classes = "track_frame")
   smoove::findSingleBreakPoint(
-    Z = easting(data) + 1i* northing(data), #cbind(easting(data), northing(data)), #T = index(data),
-    T = as.numeric(difftime(index(data), index(data)[1], units = time.units)),#.as.integer(index(data)),
+    Z = easting(data) + 1i* northing(data), #cbind(easting(data), northing(data)), #T = time(data),
+    T = as.numeric(difftime(time(data), time(data)[1], units = time.units)),#.as.integer(time(data)),
     k = k,
     method = method,
     plotme = plotme,
@@ -384,19 +391,19 @@ find_single_break_point <- function(data, k = 1, method = "sweep", plotme=TRUE, 
 }
 
 
-#' @noRd
 #' @export
+#' @rdname find_single_break_point
 find_single_break_point.data.frame <- function(data, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...) {
   find_single_break_point.track_frame(as.track_frame(data), k = k, method = method,
                                       plotme = plotme, time.units = time.units, ...)
 }
 
 
-#' @noRd
 #' @export
+#' @rdname find_single_break_point
 find_single_break_point.move2 <- find_single_break_point.data.frame
 
 
-#' @noRd
 #' @export
+#' @rdname find_single_break_point
 find_single_break_point.sftrack <- find_single_break_point.data.frame

@@ -2,9 +2,61 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{test_cp}
 \alias{test_cp}
+\alias{test_cp.track_frame}
+\alias{test_cp.data.frame}
+\alias{test_cp.move2}
+\alias{test_cp.sftrack}
 \title{Test RACVM change point}
 \usage{
 test_cp(
+  data,
+  cp,
+  start,
+  end,
+  modelset = "all",
+  spline = FALSE,
+  criterion = "BIC",
+  time.units = "min",
+  ...
+)
+
+\method{test_cp}{track_frame}(
+  data,
+  cp,
+  start,
+  end,
+  modelset = "all",
+  spline = FALSE,
+  criterion = "BIC",
+  time.units = "min",
+  ...
+)
+
+\method{test_cp}{data.frame}(
+  data,
+  cp,
+  start,
+  end,
+  modelset = "all",
+  spline = FALSE,
+  criterion = "BIC",
+  time.units = "min",
+  ...
+)
+
+\method{test_cp}{move2}(
+  data,
+  cp,
+  start,
+  end,
+  modelset = "all",
+  spline = FALSE,
+  criterion = "BIC",
+  time.units = "min",
+  ...
+)
+
+\method{test_cp}{sftrack}(
   data,
   cp,
   start,
@@ -39,6 +91,6 @@ test_cp(
 Identifies appropriate models on either side of a change point
 }
 \examples{
-tf <- sim_travel_path(100, format = "track_frame")
-test_cp(tf, 50, 1, 100)
+tf <- sim_travel_path(1000, format = "track_frame")
+test_cp(tf, 10, 1, 100)
 }

@@ -1,11 +1,13 @@
 #' @import trackframe
 #' @importFrom checkmate assert_choice check_class
 #' @importFrom sf st_coordinates
+# #' @importFrom sftrack as_sftrack
+# #' @importFrom move2 mt_as_move2
 #' @importFrom zoo index
 #' @importFrom gplots rich.colors
 #' @importFrom scales alpha
 #' @importFrom graphics legend par points mtext title
-#' @importFrom stats acf
+#' @importFrom stats acf runif
 
 NULL
 

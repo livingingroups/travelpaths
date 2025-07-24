@@ -38,14 +38,16 @@ Default is 0.2.}
 \item{track_prefix}{A character string used as a prefix for track IDs. Default is "track".
 Track IDs will be formatted as \code{prefix\_number}.}
 
-\item{format}{A character string, either "track_frame", "data.frame", "matrix", "sftrack" or "move2".}
+\item{format}{A character string, either \code{"track\_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.}
 }
 \value{
-A \code{track\_frame} object.
+Depending on the format argument either a \code{"track\_frame"} or
+ \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.
 }
 \description{
-This function creates multiple random travel paths and combines them into a single
-\code{track\_frame} object. Each path is assigned a unique track ID.
+This function creates multiple random travel paths and combines them into a single object. 
+Each path is assigned coordinates (easting/northing for format track_frame and latitude/longitude else) and time values and a unique track ID.
+Each path can include stationary periods and movements with configurable parameters. The following output formats are supported: \code{"track\_frame"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 }
 \examples{
 # Generate 3 tracks with different sizes
