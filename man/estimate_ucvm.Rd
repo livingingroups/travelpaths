@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{estimate_ucvm}
 \alias{estimate_ucvm}
-\alias{estimate_ucvm.track_frame}
+\alias{estimate_ucvm.trackframe}
 \alias{estimate_ucvm.data.frame}
 \alias{estimate_ucvm.move2}
 \alias{estimate_ucvm.sftrack}
@@ -19,7 +19,7 @@ estimate_ucvm(
   ...
 )
 
-\method{estimate_ucvm}{track_frame}(
+\method{estimate_ucvm}{trackframe}(
   data,
   method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
   parameters = c("tau", "nu"),
@@ -64,7 +64,7 @@ estimate_ucvm(
 )
 }
 \arguments{
-\item{data}{an object coercible to class \code{track_frame}}
+\item{data}{an object coercible to class \code{trackframe}}
 
 \item{method}{the method to use for the estimation.  These are (in increasing : velocity auto-correlation fitting (\code{vaf}), correlated 
 random walk matching (\code{crw}), velocity likelihood (\code{vLike}), position likelihood (\code{zLike}) and position likelihood with Kalman 

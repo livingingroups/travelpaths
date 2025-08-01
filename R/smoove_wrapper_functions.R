@@ -5,7 +5,7 @@
 #' This  function  estimates the mean speed \eqn{nu}, the time-scale \eqn{tau} and (occasionally) the initial speed \eqn{v_0} of the unbiased 
 #' correlated velocity movement (UCVM).  See Gurarie et al. (2016) and the \code{vignette("smoove", package = "smoove")} vignette for more details. 
 #' 
-#' @param data an object coercible to class \code{track_frame}
+#' @param data an object coercible to class \code{trackframe}
 #' @param method the method to use for the estimation.  These are (in increasing : velocity auto-correlation fitting (\code{vaf}), correlated 
 #' random walk matching (\code{crw}), velocity likelihood (\code{vLike}), position likelihood (\code{zLike}) and position likelihood with Kalman 
 #' filter (\code{crawl}). This last method is generally he best method, since it  fits the position likelihood more efficiently by using a Kalman 
@@ -35,7 +35,7 @@ UseMethod("estimate_ucvm")
 
 #' @export
 #' @rdname estimate_ucvm
-estimate_ucvm.track_frame <- function(data,
+estimate_ucvm.trackframe <- function(data,
                           method = c("vaf", "crw", "vLike", "zLike", "crawl")[3],
                           parameters = c("tau", "nu"),
                           time.units = "min",
@@ -43,7 +43,7 @@ estimate_ucvm.track_frame <- function(data,
                           spline = FALSE,
                           diagnose = TRUE,
                           ...) {
-  # checkmate::assert_class(data, classes = "track_frame")
+  # checkmate::assert_class(data, classes = "trackframe")
   fit <- smoove::estimateUCVM(
     Z = cbind(easting(data), northing(data)),
     T = as.POSIXct(time(data)), #FIXME check as.POSIXct in Trackframe?
@@ -68,7 +68,7 @@ estimate_ucvm.data.frame <- function(data,
                                      spline = FALSE,
                                      diagnose = TRUE,
                                          ...) {
-  estimate_ucvm.track_frame(as.track_frame(data), method = method, parameters = parameters,
+  estimate_ucvm.trackframe(as.trackframe(data), method = method, parameters = parameters,
                             time.units = time.units, CI = CI, spline = spline, diagnose = diagnose)
 }
 
@@ -86,7 +86,7 @@ estimate_ucvm.sftrack <- estimate_ucvm.data.frame
 #' 
 #' applies acf
 #'
-#' @param data an object coercible to class \code{track_frame}
+#' @param data an object coercible to class \code{trackframe}
 #'
 #' @export
 #' @rdname diagnose_crw
@@ -96,8 +96,8 @@ diagnose_crw <- function(data){
 
 #' @export
 #' @rdname diagnose_crw
-diagnose_crw.track_frame <- function(data) {
-  checkmate::assert_class(data, classes = "track_frame")
+diagnose_crw.trackframe <- function(data) {
+  checkmate::assert_class(data, classes = "trackframe")
   # smoove:::DiagnoseCRW(cbind(easting(data), northing(data)))
   Z <- cbind(easting(data), northing(data))
   phi <- Arg(diff(Z))
@@ -123,7 +123,7 @@ diagnose_crw.track_frame <- function(data) {
 #' @export
 #' @rdname diagnose_crw
 diagnose_crw.data.frame <- function(data) {
-  diagnose_crw.track_frame(as.track_frame(data))
+  diagnose_crw.trackframe(as.trackframe(data))
 }
 
 
@@ -147,7 +147,7 @@ diagnose_crw.sftrack <- diagnose_crw.data.frame
 #' 
 #' The \code{fitRACVM} function is an (internal) helper function. 
 #' 
-#' @param data an object of class \code{track_frame}
+#' @param data an object of class \code{trackframe}
 #' @param model one of UCVM, RCVM, ACVM or RACVM. 
 #' @param compare.models whether to compare four models: with both rotation and advection, only rotation, only advection, or neither.  The comparison provides a table with the log likelihood, number of parameters, AIC, BIC, delta AIC and delta BIC values.  A limited comparison set may be useful when running the fit many times (e.g. when performing change point analysis). 
 #' @param modelset which models to fit and compare (if \code{compare.models}) is TRUE)
@@ -175,7 +175,7 @@ estimate_racvm <- function(data,
 
 #' @export
 #' @rdname estimate_racvm
-estimate_racvm.track_frame <- function(data,
+estimate_racvm.trackframe <- function(data,
                                        model = "RACVM", 
                                        compare.models = TRUE, 
                                        modelset = c("UCVM", "ACVM", "RCVM", "RACVM"),
@@ -185,7 +185,7 @@ estimate_racvm.track_frame <- function(data,
                                        T.spline= NULL,  
                                        time.units = "min",
                                        verbose = FALSE) {
-  checkmate::assert_class(data, classes = "track_frame")
+  checkmate::assert_class(data, classes = "trackframe")
   fit <- smoove::estimateRACVM(
     Z = cbind(easting(data), northing(data)), #T = time(data),
     T = as.POSIXct(time(data)),
@@ -214,7 +214,7 @@ estimate_racvm.data.frame <- function(data,
                                      T.spline= NULL,  
                                      time.units = "min",
                                      verbose = FALSE) {
-  estimate_racvm.track_frame(as.track_frame(data), model= model, compare.models = compare.models,
+  estimate_racvm.trackframe(as.trackframe(data), model= model, compare.models = compare.models,
                             modelset = modelset, p0 = p0, spline = spline, spline.res = spline.res,
                             T.spline = T.spline, time.units = time.units, verbose = verbose)
 }
@@ -237,7 +237,7 @@ estimate_racvm.sftrack <- estimate_racvm.data.frame
 #' 
 #' Sets a window (a subset of movement data within specific time window), computes likelihoods for a set of candidate change points within the window, and steps the window forward, filling out a likelihood matrix. 
 #' 
-#' @param data an object of class \code{track_frame}
+#' @param data an object of class \code{trackframe}
 #' @param model model to fit for the change point sweep - typically the most complex model in the candidate model set. 
 #' @param windowsize time window of analysis to scan, IMPORTANTLY: in units of time (T).
 #' @param windowstep step (in time) by which the window advances.  The smaller the step, the slower but more thorough the estimation. 
@@ -255,8 +255,8 @@ sweep_racvm <- function(data, windowsize = 1000, windowstep = 50, model='UCVM', 
 
 #' @export
 #' @rdname sweep_racvm
-sweep_racvm.track_frame <- function(data, windowsize = 1000, windowstep = 50, model='UCVM', progress = TRUE, time.unit = "mins", .parallel = FALSE, ...){
-  checkmate::assert_class(data, classes = "track_frame")
+sweep_racvm.trackframe <- function(data, windowsize = 1000, windowstep = 50, model='UCVM', progress = TRUE, time.unit = "mins", .parallel = FALSE, ...){
+  checkmate::assert_class(data, classes = "trackframe")
   smoove::sweepRACVM(
     Z = cbind(easting(data), northing(data)),
     T = as.POSIXct(time(data)),
@@ -272,7 +272,7 @@ sweep_racvm.track_frame <- function(data, windowsize = 1000, windowstep = 50, mo
 #' @export
 #' @rdname sweep_racvm
 sweep_racvm.data.frame <- function(data, windowsize = 1000, windowstep = 50, model='UCVM', progress = TRUE, time.unit = "mins", .parallel = FALSE, ...) {
-  sweep_racvm.track_frame(as.track_frame(data), windowsize = windowsize, windowstep = windowstep,
+  sweep_racvm.trackframe(as.trackframe(data), windowsize = windowsize, windowstep = windowstep,
                           model = model, progress = progress, time.unit = time.unit, .parallel = .parallel, ...)
 }
 
@@ -291,7 +291,7 @@ sweep_racvm.sftrack <- sweep_racvm.data.frame
 #' 
 #' Identifies appropriate models on either side of a change point
 #' 
-#' @param data an object of class \code{track_frame}
+#' @param data an object of class \code{trackframe}
 #' @param cp change point
 #' @param start beginning time of segment to analyze
 #' @param end end time of segment to analyze
@@ -301,7 +301,7 @@ sweep_racvm.sftrack <- sweep_racvm.data.frame
 #' @param time.units time units of calculations (e.g. "sec", "min", "hour", "day")
 #' @param ... further params to \code{getFit} internal function
 #' @examples
-#' tf <- sim_travel_path(1000, format = "track_frame")
+#' tf <- sim_travel_path(1000, format = "trackframe")
 #' test_cp(tf, 10, 1, 100)
 #' @export
 #' @rdname test_cp
@@ -311,8 +311,8 @@ test_cp <- function(data, cp, start, end, modelset = "all", spline = FALSE, crit
 
 #' @export
 #' @rdname test_cp
-test_cp.track_frame <- function(data, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", time.units = "min", ...){
-  checkmate::assert_class(data, classes = "track_frame")
+test_cp.trackframe <- function(data, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", time.units = "min", ...){
+  checkmate::assert_class(data, classes = "trackframe")
   smoove::testCP(
     Z = easting(data) + 1i* northing(data), #Z = cbind(easting(data), northing(data)), #T = time(data),
     T = as.numeric(difftime(time(data), time(data)[1], units = time.units)),#as.POSIXct(time(data)),
@@ -329,7 +329,7 @@ test_cp.track_frame <- function(data, cp, start, end, modelset = "all", spline =
 #' @export
 #' @rdname test_cp
 test_cp.data.frame <- function(data, cp, start, end, modelset = "all", spline = FALSE, criterion = "BIC", time.units = "min", ...) {
-  test_cp.track_frame(as.track_frame(data), cp = cp, start = start, end = end,
+  test_cp.trackframe(as.trackframe(data), cp = cp, start = start, end = end,
                       modelset = modelset, spline = spline, criterion = criterion, time.units = time.units, ...)
 }
 
@@ -356,7 +356,7 @@ test_cp.sftrack <- test_cp.data.frame
 #' likelihood profiles are typically quite rough.  
 #' 
 #' 
-#' @param data an object of class \code{track_frame}
+#' @param data an object of class \code{trackframe}
 #' @param k tuning parameter for the smoothing of the likelihood profile spline. 
 #' The number of knots is "length(T)/4 * k" - the lower the value of k, the smoother the spline. 
 #' @param method one of "sweep" or "optimize". See details. 
@@ -366,7 +366,7 @@ test_cp.sftrack <- test_cp.data.frame
 #' 
 #' @examples
 #' set.seed(2025)
-#' tf <- sim_travel_path(50, format = "track_frame")
+#' tf <- sim_travel_path(50, format = "trackframe")
 #' find_single_break_point(tf, method = "sweep")
 #' find_single_break_point(tf, method = "optimize")
 #' @export
@@ -378,9 +378,9 @@ find_single_break_point <- function(data, k = 1, method = "sweep", plotme=TRUE, 
 
 #' @export
 #' @rdname find_single_break_point
-find_single_break_point.track_frame <- function(data, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...){
-  #FIXME: good idea to always transform to track_frame
-  checkmate::assert_class(data, classes = "track_frame")
+find_single_break_point.trackframe <- function(data, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...){
+  #FIXME: good idea to always transform to trackframe
+  checkmate::assert_class(data, classes = "trackframe")
   smoove::findSingleBreakPoint(
     Z = easting(data) + 1i* northing(data), #cbind(easting(data), northing(data)), #T = time(data),
     T = as.numeric(difftime(time(data), time(data)[1], units = time.units)),#.as.integer(time(data)),
@@ -394,7 +394,7 @@ find_single_break_point.track_frame <- function(data, k = 1, method = "sweep", p
 #' @export
 #' @rdname find_single_break_point
 find_single_break_point.data.frame <- function(data, k = 1, method = "sweep", plotme=TRUE, time.units = "min", ...) {
-  find_single_break_point.track_frame(as.track_frame(data), k = k, method = method,
+  find_single_break_point.trackframe(as.trackframe(data), k = k, method = method,
                                       plotme = plotme, time.units = time.units, ...)
 }
 

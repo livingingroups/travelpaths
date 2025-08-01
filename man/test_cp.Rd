@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{test_cp}
 \alias{test_cp}
-\alias{test_cp.track_frame}
+\alias{test_cp.trackframe}
 \alias{test_cp.data.frame}
 \alias{test_cp.move2}
 \alias{test_cp.sftrack}
@@ -20,7 +20,7 @@ test_cp(
   ...
 )
 
-\method{test_cp}{track_frame}(
+\method{test_cp}{trackframe}(
   data,
   cp,
   start,
@@ -69,7 +69,7 @@ test_cp(
 )
 }
 \arguments{
-\item{data}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{trackframe}}
 
 \item{cp}{change point}
 
@@ -91,6 +91,6 @@ test_cp(
 Identifies appropriate models on either side of a change point
 }
 \examples{
-tf <- sim_travel_path(1000, format = "track_frame")
+tf <- sim_travel_path(1000, format = "trackframe")
 test_cp(tf, 10, 1, 100)
 }

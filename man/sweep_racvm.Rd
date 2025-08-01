@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{sweep_racvm}
 \alias{sweep_racvm}
-\alias{sweep_racvm.track_frame}
+\alias{sweep_racvm.trackframe}
 \alias{sweep_racvm.data.frame}
 \alias{sweep_racvm.move2}
 \alias{sweep_racvm.sftrack}
@@ -19,7 +19,7 @@ sweep_racvm(
   ...
 )
 
-\method{sweep_racvm}{track_frame}(
+\method{sweep_racvm}{trackframe}(
   data,
   windowsize = 1000,
   windowstep = 50,
@@ -64,7 +64,7 @@ sweep_racvm(
 )
 }
 \arguments{
-\item{data}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{trackframe}}
 
 \item{windowsize}{time window of analysis to scan, IMPORTANTLY: in units of time (T).}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{find_single_break_point}
 \alias{find_single_break_point}
-\alias{find_single_break_point.track_frame}
+\alias{find_single_break_point.trackframe}
 \alias{find_single_break_point.data.frame}
 \alias{find_single_break_point.move2}
 \alias{find_single_break_point.sftrack}
@@ -17,7 +17,7 @@ find_single_break_point(
   ...
 )
 
-\method{find_single_break_point}{track_frame}(
+\method{find_single_break_point}{trackframe}(
   data,
   k = 1,
   method = "sweep",
@@ -54,7 +54,7 @@ find_single_break_point(
 )
 }
 \arguments{
-\item{data}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{trackframe}}
 
 \item{k}{tuning parameter for the smoothing of the likelihood profile spline. 
 The number of knots is "length(T)/4 * k" - the lower the value of k, the smoother the spline.}
@@ -80,7 +80,7 @@ likelihood profiles are typically quite rough.
 }
 \examples{
 set.seed(2025)
-tf <- sim_travel_path(50, format = "track_frame")
+tf <- sim_travel_path(50, format = "trackframe")
 find_single_break_point(tf, method = "sweep")
 find_single_break_point(tf, method = "optimize")
 }

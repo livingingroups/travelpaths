@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{estimate_racvm}
 \alias{estimate_racvm}
-\alias{estimate_racvm.track_frame}
+\alias{estimate_racvm.trackframe}
 \alias{estimate_racvm.data.frame}
 \alias{estimate_racvm.move2}
 \alias{estimate_racvm.sftrack}
@@ -21,7 +21,7 @@ estimate_racvm(
   verbose = FALSE
 )
 
-\method{estimate_racvm}{track_frame}(
+\method{estimate_racvm}{trackframe}(
   data,
   model = "RACVM",
   compare.models = TRUE,
@@ -74,7 +74,7 @@ estimate_racvm(
 )
 }
 \arguments{
-\item{data}{an object of class \code{track_frame}}
+\item{data}{an object of class \code{trackframe}}
 
 \item{model}{one of UCVM, RCVM, ACVM or RACVM.}
 

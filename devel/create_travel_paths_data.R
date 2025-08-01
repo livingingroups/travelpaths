@@ -1,5 +1,5 @@
 library(trackframe) #FIXME: remove once transferred to travelpaths
-# library(travelpaths)
+library(travelpaths)
 set.seed(2025)
 travel_path_matrix <- sim_travel_path(size = 1000, format = "matrix")
 save(travel_path_matrix, file = "~/travelpaths-devel/pkgs/travelpaths/data/travel_path_matrix.rda")
@@ -9,8 +9,8 @@ travel_path_data_frame <- sim_travel_path(size = 1000, format = "data.frame")
 save(travel_path_data_frame, file = "~/travelpaths-devel/pkgs/travelpaths/data/travel_path_data_frame.rda")
 
 set.seed(2025)
-travel_path_track_frame <- sim_travel_path(size = 1000, format = "track_frame")
-save(travel_path_track_frame, file = "~/travelpaths-devel/pkgs/travelpaths/data/travel_path_track_frame.rda")
+travel_path_trackframe <- sim_travel_path(size = 1000, format = "trackframe")
+save(travel_path_trackframe, file = "~/travelpaths-devel/pkgs/travelpaths/data/travel_path_trackframe.rda")
 
 set.seed(2025)
 travel_path_sftrack <- sim_travel_path(size = 1000, format = "sftrack")
@@ -31,8 +31,8 @@ travel_paths_data_frame <- sim_travel_paths(ntracks = 3, size = 1000, format = "
 save(travel_paths_data_frame, file = "~/travelpaths-devel/pkgs/travelpaths/data/travel_paths_data_frame.rda")
 
 set.seed(2025)
-travel_paths_track_frame <- sim_travel_paths(ntracks = 3, size = 1000, format = "track_frame")
-save(travel_paths_track_frame, file = "~/travelpaths-devel/pkgs/travelpaths/data/travel_paths_track_frame.rda")
+travel_paths_trackframe <- sim_travel_paths(ntracks = 3, size = 1000, format = "trackframe")
+save(travel_paths_trackframe, file = "~/travelpaths-devel/pkgs/travelpaths/data/travel_paths_trackframe.rda")
 
 set.seed(2025)
 travel_paths_sftrack <- sim_travel_paths(ntracks = 3, size = 1000, format = "sftrack")

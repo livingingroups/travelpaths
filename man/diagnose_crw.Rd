@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoove_wrapper_functions.R
 \name{diagnose_crw}
 \alias{diagnose_crw}
-\alias{diagnose_crw.track_frame}
+\alias{diagnose_crw.trackframe}
 \alias{diagnose_crw.data.frame}
 \alias{diagnose_crw.move2}
 \alias{diagnose_crw.sftrack}
@@ -10,7 +10,7 @@
 \usage{
 diagnose_crw(data)
 
-\method{diagnose_crw}{track_frame}(data)
+\method{diagnose_crw}{trackframe}(data)
 
 \method{diagnose_crw}{data.frame}(data)
 
@@ -19,7 +19,7 @@ diagnose_crw(data)
 \method{diagnose_crw}{sftrack}(data)
 }
 \arguments{
-\item{data}{an object coercible to class \code{track_frame}}
+\item{data}{an object coercible to class \code{trackframe}}
 }
 \description{
 applies acf
