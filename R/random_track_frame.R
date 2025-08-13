@@ -223,8 +223,8 @@ sim_travel_paths <- function(ntracks,
     
     data_tf <- as.trackframe(data = data,
                    time_col = "time",
-                   easting_col = "latitude",
-                   northing_col = "longitude")
+                   easting_col = "longitude",
+                   northing_col = "latitude")
     
     data_tf[["sft_group"]] <- NULL
     data_tf[["id"]]  <- data[["id"]] 
