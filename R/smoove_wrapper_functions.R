@@ -2,7 +2,7 @@
 
 #' Estimating parameters of unbiased CVM
 #' 
-#' This  function  estimates the mean speed \eqn{nu}, the time-scale \eqn{tau} and (occasionally) the initial speed \eqn{v_0} of the unbiased 
+#' This function estimates the mean speed \eqn{nu}, the time-scale \eqn{tau} and (occasionally) the initial speed \eqn{v_0} of the unbiased 
 #' correlated velocity movement (UCVM).  See Gurarie et al. (2016) and the \code{vignette("smoove", package = "smoove")} vignette for more details. 
 #' 
 #' @param data an object coercible to class \code{trackframe}
