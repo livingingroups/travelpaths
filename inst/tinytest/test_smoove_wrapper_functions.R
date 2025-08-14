@@ -2,7 +2,7 @@ library(tinytest)
 library(smoove)
 # compare estimate_ucvm with smoove::estimateUCVM
 set.seed(2025)
-tf <- sim_travel_path(100, format = "track_frame", max_step = 0.01, stay_prob = 0.3, time_increment = 60)
+tf <- sim_travel_path(100, format = "trackframe", max_step = 0.01, stay_prob = 0.3, time_increment = 60)
 Z = cbind(easting(tf), northing(tf))
 T = as.POSIXct(time(tf))
 
@@ -15,7 +15,7 @@ travelpaths_estimate_ucvm2 <- estimate_ucvm(tf, CI = TRUE)
 expect_equal(travelpaths_estimate_ucvm2, smoove_estimateUCVM2)
 
 set.seed(2025)
-tf_equi <- sim_travel_path(100, format = "track_frame", max_step = 0.01, stay_prob = 0, time_increment = 60)
+tf_equi <- sim_travel_path(100, format = "trackframe", max_step = 0.01, stay_prob = 0, time_increment = 60)
 Z_equi = cbind(easting(tf_equi), northing(tf_equi))
 T_equi = as.POSIXct(time(tf_equi))
 
@@ -85,7 +85,7 @@ expect_equal(travelpaths_estimate_rcvm, smoove_estimateRACVM_rcvm)
 
 # test_cp
 set.seed(2025)
-tf_test <- sim_travel_path(1000, format = "track_frame")
+tf_test <- sim_travel_path(1000, format = "trackframe")
 # Z_test = cbind(easting(tf_test), northing(tf_test))
 # T_test = as.POSIXct(time(tf_test))
 Z_test = easting(tf_test) + 1i* northing(tf_test) #Z = cbind(easting(data), northing(data)), #T = time(data),
@@ -100,7 +100,7 @@ expect_equal(travelpaths_test_cp, smoove_testCP)
 # find_single_break_point
 
 set.seed(2025)
-tf_fsb <- sim_travel_path(50, format = "track_frame")
+tf_fsb <- sim_travel_path(50, format = "trackframe")
 Z2 = easting(tf_fsb) + 1i* northing(tf_fsb) #cbind(easting(data), northing(data)), #T = time(data),
 T2 = as.numeric(difftime(time(tf_fsb), time(tf_fsb)[1], units = "min"))
 

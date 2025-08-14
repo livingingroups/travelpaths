@@ -15,7 +15,7 @@ from_grouping_label <- gcplyr::from_excel
 # core user facing portion
 travel_path_segment <- function(data, model_spec, ...) {
   # check inputs on their own
-  checkmate::assert_class(data, 'track_frame') # this should be replaced with coercion
+  checkmate::assert_class(data, 'trackframe') # this should be replaced with coercion
   
   # check inputs against each other
   if(requires_equidistent_times(model_spec)) {
@@ -30,7 +30,7 @@ travel_path_grouping <- function(segmentation_fit, model_spec, ...) {
   # check inputs on their own
 
   # check inputs against each other
-  if(requires_segment_coords(model_spec)) checkmate::assert_class(attr(segmentation_fit, 'label_meta'), 'track_frame')
+  if(requires_segment_coords(model_spec)) checkmate::assert_class(attr(segmentation_fit, 'label_meta'), 'trackframe')
 
 
   fit(model_spec, segmentation_fit)
@@ -101,7 +101,7 @@ fit.stop_threshold_model_spec <- function(model_spec, data) {
   # use start of the segment as timestamp
   label_meta$index <- index(data)[match(seq_len(dim(raw_result$coordinates)[1]), labels)]
 
-  attributes(labels) <- list(label_meta = as.track_frame(
+  attributes(labels) <- list(label_meta = as.trackframe(
     label_meta,
     'index',
     'easting',
@@ -168,7 +168,7 @@ if(FALSE) {
     ) |>
     dplyr::mutate(timestamp = as.POSIXct(timestamp)) |>
     sf::st_as_sf(crs = 4326, coords = c("location.long", "location.lat"))
-  tf <- as.track_frame(abby_4652, index='timestamp', lon_col='utm.easting', lat_col='utm.northing')
+  tf <- as.trackframe(abby_4652, index='timestamp', lon_col='utm.easting', lat_col='utm.northing')
   saveRDS(tf, 'data/abby.csv')
 } else {
   tf <- readRDS('data/abby.csv')

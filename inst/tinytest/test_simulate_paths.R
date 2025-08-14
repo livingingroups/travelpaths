@@ -18,9 +18,9 @@ test_simulate_path <- function() {
   expect_equal(NCOL(data_df), 4)
   
   set.seed(2025)
-  tf <- sim_travel_path(100, format = "track_frame")
+  tf <- sim_travel_path(100, format = "trackframe")
   expect_true(all(c("time", "easting", "northing") %in% colnames(tf)))
-  expect_inherits(tf, "track_frame")
+  expect_inherits(tf, "trackframe")
   expect_equal(NROW(tf), 100)
   expect_equal(NCOL(tf), 6)
   expect_equal(easting(tf), tf$easting)
@@ -64,12 +64,12 @@ test_simulate_paths <- function() {
   ntracks <- 3
   sizes <- c(2, 4, 5)
   multi_track <- sim_travel_paths(ntracks, sizes)
-  expect_inherits(multi_track, "track_frame")
+  expect_inherits(multi_track, "trackframe")
   expect_equal(sum(sizes), NROW(multi_track))
   expect_length(unique(id(multi_track)), ntracks)
   
   track2 <- select_id(multi_track, "track_2")
-  expect_inherits(track2, "track_frame")
+  expect_inherits(track2, "trackframe")
   expect_equal(NROW(track2), sizes[2])
   expect_length(unique(id(track2)), 1)
   

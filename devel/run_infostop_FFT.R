@@ -19,14 +19,14 @@ setwd("~/travelpaths-devel/pkgs/travelpaths/devel")
 FFT <- read.csv(file.path("..", "..", "..", "data", "FFT.csv"))
 
 FFT$timestamp <- as.POSIXct(FFT$timestamp)
-FFT_tf_lon_lat <- as.track_frame(FFT,
+FFT_tf_lon_lat <- as.trackframe(FFT,
                          time_col  = "timestamp",
                          easting_col = "location.lat", #"utm.easting",
                          northing_col = "location.long",#"utm.northing",
                          id_col = "individual.local.identifier"
 )
 
-FFT_tf <- as.track_frame(FFT,
+FFT_tf <- as.trackframe(FFT,
                          time_col  = "timestamp",
                          easting_col = "utm.easting", #"utm.easting",
                          northing_col = "utm.northing",#"utm.northing",

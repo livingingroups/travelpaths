@@ -8,9 +8,9 @@ setwd("~/travelpaths-devel/pkgs/travelpaths/devel")
 # load data
 FFT <- read.csv(file.path("..", "..", "..", "data", "FFT.csv"))
 
-# travelpaths:::as.track_frame.data.frame
+# travelpaths:::as.trackframe.data.frame
 FFT$timestamp <- as.POSIXct(FFT$timestamp) #need Posixct timestamp
-FFT_tf <- as.track_frame(FFT,
+FFT_tf <- as.trackframe(FFT,
                          time_col  = "timestamp",
                          easting_col = "utm.easting",
                          northing_col = "utm.northing",

@@ -11,6 +11,6 @@ An object of class \code{trackframe} (inherits from \code{data.frame}) with 3000
 travel_paths_trackframe
 }
 \description{
-track_frame created with sim_travel_paths().
+trackframe created with sim_travel_paths().
 }
 \keyword{datasets}
