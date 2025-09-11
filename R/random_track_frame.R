@@ -21,7 +21,7 @@ sim_travel_path <- function(size,
                          max_step = 0.001,
                          time_increment = 60, # in seconds
                          start_location = c(48.2083537, 16.3725042),
-                         start_time = Sys.time(),
+                         start_time = as.character(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
                          stay_prob = 0.2,
                          format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")) {
   checkmate::assert_integerish(size, lower = 2, any.missing = FALSE)
@@ -148,7 +148,7 @@ sim_travel_paths <- function(ntracks,
                              max_step = 0.001,
                              time_increment = 60, # in seconds
                              start_location = c(48.2083537, 16.3725042),
-                             start_time = Sys.time(),
+                             start_time = as.character(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
                              stay_prob = 0.2,
                              track_prefix = "track",
                              format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")) {
@@ -234,6 +234,4 @@ sim_travel_paths <- function(ntracks,
   } else {
     return(data)
   }
-  
-  
 }
