@@ -6,7 +6,7 @@
 #' @param size An integer giving the number of points to generate in the path.
 #' @param max_step A numeric giving the maximum step size in degrees for each movement. Default is 0.001.
 #' @param time_increment A numeric giving the time between consecutive points in seconds. Default is 60 (1 minute).
-#' @param start_location A numeric vector giving the starting location as c(latitude, longitude). Default is Vienna (48.2083537, 16.3725042).
+#' @param start_location A numeric vector giving the starting location as c(longitude, latitude). Default is Vienna (16.3725042, 48.2083537).
 #' @param start_time A POSIXct giving the starting time for the path. Default is current time.
 #' @param stay_prob A numeric giving the probability of staying at the same location (0-1). Default is 0.2.
 #' @param format A character string, either \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
@@ -20,8 +20,8 @@
 sim_travel_path <- function(size,
                          max_step = 0.001,
                          time_increment = 60, # in seconds
-                         start_location = c(48.2083537, 16.3725042),
-                         start_time = format(Sys.time(), "%Y-%m-%d %H:%M:%S"),
+                         start_location = c(16.3725042, 48.2083537),
+                         start_time = as.POSIXct(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
                          stay_prob = 0.2,
                          format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")) {
   checkmate::assert_integerish(size, lower = 2, any.missing = FALSE)
@@ -38,8 +38,8 @@ sim_travel_path <- function(size,
   )
   
   path$time[1] <- start_time
-  path$latitude[1] <- start_location[1]
-  path$longitude[1] <- start_location[2]
+  path$longitude[1] <- start_location[1]
+  path$latitude[1] <- start_location[2]
 
   
   for (i in 2:size) {
@@ -71,15 +71,15 @@ sim_travel_path <- function(size,
     }
     data <- cbind(path, "id" = "track_1")
     return(as_sftrack(data,
-                      coords = c("latitude", "longitude"),
-                      crs = 4326))
+                      coords = c("longitude", "latitude"),
+                      crs = "OGC:CRS84"))
   } else if (format == "move2") {
     mt_as_move2 <- try(getNamespace("move2")$mt_as_move2, silent = TRUE)
     if (inherits(mt_as_move2, "try-error")) {
       stop("package 'move2' is required for this function. Please install it.")
     }
     data <- cbind(path, "id" = "track_1")
-    return(mt_as_move2(data, coords = c("latitude", "longitude"), time_column = "time", track_id_column = "id", crs = 4326))
+    return(mt_as_move2(data, coords = c("longitude", "latitude"), time_column = "time", track_id_column = "id", crs = "OGC:CRS84"))
     
   } else if(format == "trackframe") {
     data <- cbind(path, "id" = "track_1")
@@ -88,8 +88,8 @@ sim_travel_path <- function(size,
       stop("package 'sftrack' is required for this function. Please install it.")
     }
     data <- as_sftrack(data,
-                      coords = c("latitude", "longitude"),
-                      crs = 4326)
+                      coords = c("longitude", "latitude"),
+                      crs = "OGC:CRS84")
     data_tf <- as.trackframe(data = data,
                    time_col = "time",
                    easting_col = "easting",
@@ -120,7 +120,8 @@ sim_travel_path <- function(size,
 #'   Default is 0.001 (approximately 100m at the equator).
 #' @param time_increment A numeric giving the time between consecutive points in seconds.
 #'   Default is 60 (1 minute).
-#' @param start_location A numeric vector giving the starting location as northing, easting.
+#' @param start_location A numeric vector giving the starting location as c(longitude, latitude).
+#'   Default is Vienna (16.3725042, 48.2083537)
 #' @param start_time A POSIXct giving the starting time for the paths. Default is current time.
 #' @param stay_prob A numeric between 0 and 1 giving the probability of staying at the same location.
 #'   Default is 0.2.
@@ -147,8 +148,8 @@ sim_travel_paths <- function(ntracks,
                              sizes,
                              max_step = 0.001,
                              time_increment = 60, # in seconds
-                             start_location = c(48.2083537, 16.3725042),
-                             start_time = format(Sys.time(), "%Y-%m-%d %H:%M:%S"),
+                             start_location = c(16.3725042, 48.2083537),
+                             start_time = as.POSIXct(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
                              stay_prob = 0.2,
                              track_prefix = "track",
                              format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")) {
@@ -203,14 +204,14 @@ sim_travel_paths <- function(ntracks,
     }
     
     return(as_sftrack(data,
-                      coords = c("latitude", "longitude"),
-                      crs = 4326))
+                      coords = c("longitude", "latitude"),
+                      crs = "OGC:CRS84"))
   } else if (format == "move2") {
     mt_as_move2 <- try(getNamespace("move2")$mt_as_move2, silent = TRUE)
     if (inherits(mt_as_move2, "try-error")) {
       stop("package 'move2' is required for this function. Please install it.")
     }
-    return(mt_as_move2(data, coords = c("latitude", "longitude"), time_column = "time", track_id_column = "id", crs = 4326))
+    return(mt_as_move2(data, coords = c("longitude", "latitude"), time_column = "time", track_id_column = "id", crs = "OGC:CRS84"))
     
   } else if(format == "trackframe") {
     as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
@@ -218,8 +219,8 @@ sim_travel_paths <- function(ntracks,
       stop("package 'sftrack' is required for this function. Please install it.")
     }
     data <- as_sftrack(data,
-                       coords = c("latitude", "longitude"),
-                       crs = 4326)
+                       coords = c("longitude", "latitude"),
+                       crs = "OGC:CRS84")
     
     data_tf <- as.trackframe(data = data,
                    time_col = "time",
