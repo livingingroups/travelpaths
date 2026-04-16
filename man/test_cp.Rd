@@ -16,7 +16,7 @@ test_cp(
   modelset = "all",
   spline = FALSE,
   criterion = "BIC",
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -28,7 +28,7 @@ test_cp(
   modelset = "all",
   spline = FALSE,
   criterion = "BIC",
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -40,7 +40,7 @@ test_cp(
   modelset = "all",
   spline = FALSE,
   criterion = "BIC",
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -52,7 +52,7 @@ test_cp(
   modelset = "all",
   spline = FALSE,
   criterion = "BIC",
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -64,7 +64,7 @@ test_cp(
   modelset = "all",
   spline = FALSE,
   criterion = "BIC",
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 }
@@ -77,13 +77,14 @@ test_cp(
 
 \item{end}{end time of segment to analyze}
 
-\item{modelset}{set of models to compare (combination of UCVM, ACVM, RCVM, RACVM, or \code{all}, which includes all of them)}
+\item{modelset}{set of models to compare (combination of UCVM, ACVM, RCVM, RACVM, or \code{all},
+which includes all of them)}
 
 \item{spline}{whether or not to use the spline approximation for the final estimate.}
 
 \item{criterion}{selection criterion - either BIC or AIC (can be upper- or lowercased)}
 
-\item{time.units}{time units of calculations (e.g. "sec", "min", "hour", "day")}
+\item{time_units}{time units of calculations (e.g. "secs", "mins", "hours", "days")}
 
 \item{...}{further params to \code{getFit} internal function}
 }

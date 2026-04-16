@@ -48,3 +48,12 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 docs
+
+*.Rproj
+
+.quarto
+**/*.quarto_ipynb
+vignettes/.gitignore
+
+/doc/
+/Meta/

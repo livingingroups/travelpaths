@@ -11,10 +11,11 @@ FFT <- read.csv(file.path("..", "..", "..", "data", "FFT.csv"))
 # travelpaths:::as.trackframe.data.frame
 FFT$timestamp <- as.POSIXct(FFT$timestamp) #need Posixct timestamp
 FFT_tf <- as.trackframe(FFT,
-                         time_col  = "timestamp",
-                         easting_col = "utm.easting",
-                         northing_col = "utm.northing",
-                         id_col = "individual.local.identifier"
+  time_col  = "timestamp",
+  easting_col = "utm.easting",
+  northing_col = "utm.northing",
+  id_col = "individual.local.identifier",
+  crs = NA
 )
 
 str(FFT_tf)
@@ -67,7 +68,7 @@ if (FALSE){
   cl <- makeCluster(detectCores()-4)
   registerDoParallel(cl)
   sweep_tf <- sweep_racvm(data = tf, windowsize = 24*60, windowstep = 60, .parallel = TRUE, time.unit = "mins") #!!!mins
-  saveRDS(sweep_tf, '../../cvm/sweep_tf.rds')
+  saveRDS(sweep_tf, '../../../cvm/sweep_tf.rds')
 } else {
   sweep_tf <- readRDS('../../../cvm/sweep_tf.rds')
 }
@@ -89,6 +90,8 @@ CP.4 <- smoove::findCandidateChangePoints(windowsweep = sweep_tf, clusterwidth =
 CP.150 <- smoove::findCandidateChangePoints(windowsweep = sweep_tf, clusterwidth = 150)
 CP.180 <- smoove::findCandidateChangePoints(windowsweep = sweep_tf, clusterwidth = 180)
 CP.188 <- smoove::findCandidateChangePoints(windowsweep = sweep_tf, clusterwidth = 188) # 202 cp 
+
+# smoove::findCandidateChangePoints(windowsweep = sweep_tf, clusterwidth = 1000) # 202 cp 
 
 # Select significant changepoints
 # 3.2.3 III

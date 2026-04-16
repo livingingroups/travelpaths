@@ -1,15 +1,24 @@
 #' Generate Random Travel Path
 #'
-#' This function generates a random travel path with coordinates (easting/northing for format trackframe and northing/easting else) and time values.
-#' The path can include stationary periods and movements with configurable parameters. The following output formats are supported: \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
+#' This function generates a random travel path with coordinates (easting/northing for format
+#' trackframe and northing/easting else) and time values.
+#' The path can include stationary periods and movements with configurable parameters.
+#' The following output formats are supported:
+#' \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or
+#'  \code{"move2"}.
 #'
 #' @param size An integer giving the number of points to generate in the path.
-#' @param max_step A numeric giving the maximum step size in degrees for each movement. Default is 0.001.
-#' @param time_increment A numeric giving the time between consecutive points in seconds. Default is 60 (1 minute).
-#' @param start_location A numeric vector giving the starting location as c(easting, northing). Default is Vienna (16.3725042, 48.2083537).
+#' @param max_step A numeric giving the maximum step size in degrees for each movement.
+#'   Default is 0.001.
+#' @param time_increment A numeric giving the time between consecutive points in seconds.
+#'   Default is 60 (1 minute).
+#' @param start_location A numeric vector giving the starting location as c(easting, northing).
+#'   Default is Vienna (16.3725042, 48.2083537).
 #' @param start_time A POSIXct giving the starting time for the path. Default is current time.
-#' @param stay_prob A numeric giving the probability of staying at the same location (0-1). Default is 0.2.
-#' @param format A character string, either \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
+#' @param stay_prob A numeric giving the probability of staying at the same location (0-1).
+#'   Default is 0.2.
+#' @param format A character string, either \code{"trackframe"} (easting/northing),
+#'   \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #'
 #' @return Depending on the format argument either a \code{"trackframe"} or
 #'  \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.
@@ -17,85 +26,86 @@
 #' @examples
 #' data <- sim_travel_path(100, format = "matrix")
 #' @export
-sim_travel_path <- function(size,
-                         max_step = 0.001,
-                         time_increment = 60, # in seconds
-                         start_location = c(0, 0),
-                         start_time = as.POSIXct(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
-                         stay_prob = 0.2,
-                         format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")) {
+sim_travel_path <- function(
+  size,
+  max_step = 0.001,
+  time_increment = 60, # in seconds
+  start_location = c(0, 0),
+  start_time = as.POSIXct(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
+  stay_prob = 0.2,
+  format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")
+) {
   checkmate::assert_integerish(size, lower = 2, any.missing = FALSE)
   checkmate::assert_numeric(max_step, lower = 0, any.missing = FALSE)
   checkmate::assert_numeric(start_location, len = 2, any.missing = FALSE)
   checkmate::assert_posixct(start_time, any.missing = FALSE)
   checkmate::assert_numeric(stay_prob, lower = 0, upper = 1, len = 1, any.missing = FALSE)
   format <- match.arg(format)
+  if (format %in% c("sftrack", "move2") && !is_pkg_installed(format)) {
+    fmt <- "'sim_travel_path' requires the package '%s' when format '%s' is chosen."
+    stop(paste(sprintf(fmt, format, format), "Please install it.", collapse = " "))
+  }
   projected_crs <- "EPSG:32632"
-  
+
   path <- data.frame(
     time = as.POSIXct(rep(NA, size)),
     northing = numeric(size),
     easting = numeric(size)
   )
-  
+
   path$time[1] <- start_time
   path$easting[1] <- start_location[1]
   path$northing[1] <- start_location[2]
 
-  
   for (i in 2:size) {
     if (runif(1) < stay_prob) {
-      path$easting[i] <- path$easting[i-1]
-      path$northing[i] <- path$northing[i-1]
-      path$time[i] <- path$time[i-1] + round(runif(1, 1, 30)) *  time_increment
+      path$easting[i] <- path$easting[i - 1]
+      path$northing[i] <- path$northing[i - 1]
+      path$time[i] <- path$time[i - 1] + round(runif(1, 1, 30)) * time_increment
     } else {
       deasting <- runif(1, -max_step, max_step)
       dnorthing <- runif(1, -max_step, max_step)
-      
-      new_easting <- path$easting[i-1] + deasting
-      new_northing <- path$northing[i-1] + dnorthing
-      
+
+      new_easting <- path$easting[i - 1] + deasting
+      new_northing <- path$northing[i - 1] + dnorthing
+
       path$easting[i] <- new_easting
       path$northing[i] <- new_northing
-      path$time[i] <- path$time[i-1] + time_increment
-    }    
+      path$time[i] <- path$time[i - 1] + time_increment
+    }
   }
-  
+
   if (format == "matrix") {
     path$id <- 1
     path$time <- as.integer(path$time)
     return(as.matrix(path))
   } else if (format == "sftrack") {
-    as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
-    if (inherits(as_sftrack, "try-error")) {
-      stop("package 'sftrack' is required for this function. Please install it.")
-    }
     data <- cbind(path, "id" = "track_1")
-    return(as_sftrack(data,
-                      coords = c("easting", "northing"),
-                      crs = projected_crs))
+    return(sftrack::as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs))
   } else if (format == "move2") {
-    mt_as_move2 <- try(getNamespace("move2")$mt_as_move2, silent = TRUE)
-    if (inherits(mt_as_move2, "try-error")) {
-      stop("package 'move2' is required for this function. Please install it.")
-    }
     data <- cbind(path, "id" = "track_1")
-    return(mt_as_move2(data, coords = c("easting", "northing"), time_column = "time", track_id_column = "id", crs = projected_crs))
-    
-  } else if(format == "trackframe") {
+    return(move2::mt_as_move2(
+      data,
+      coords = c("easting", "northing"),
+      time_column = "time",
+      track_id_column = "id",
+      crs = projected_crs
+    ))
+  } else if (format == "trackframe") {
     data <- cbind(path, "id" = "track_1")
+    # FIXME: The dependencies are here wrong! Why should we need sftrack if we choose trackframe!
     as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
     if (inherits(as_sftrack, "try-error")) {
       stop("package 'sftrack' is required for this function. Please install it.")
     }
-    data <- as_sftrack(data,
-                      coords = c("easting", "northing"),
-                      crs = projected_crs)
-    data_tf <- as.trackframe(data = data,
-                   time_col = "time",
-                   easting_col = "easting",
-                   northing_col = "northing")
-    
+    data <- as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs)
+    data_tf <- as.trackframe(
+      data = data,
+      time_col = "time",
+      easting_col = "easting",
+      northing_col = "northing"
+    )
+
     data_tf[["sft_group"]] <- NULL
     data_tf[["id"]] <- "track_1"
     data_tf[["geometry"]] <- NULL
@@ -109,10 +119,14 @@ sim_travel_path <- function(size,
 
 #' Generate Multiple Random Travel Paths
 #'
-#' This function creates multiple random travel paths and combines them into a single object. 
-#' Each path is assigned coordinates (easting/northing for format trackframe and northing/easting else) and time values and a unique track ID.
-#' Each path can include stationary periods and movements with configurable parameters. The following output formats are supported: \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
-#' 
+#' This function creates multiple random travel paths and combines them into a single object.
+#' Each path is assigned coordinates (easting/northing for format trackframe and northing/easting
+#' else) and time values and a unique track ID.
+#' Each path can include stationary periods and movements with configurable parameters.
+#' The following output formats are supported:
+#' \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or
+#' \code{"move2"}.
+#'
 #'
 #' @param ntracks An integer specifying the number of tracks to generate.
 #' @param sizes An integer vector specifying the number of points for each track. If a single value
@@ -124,11 +138,12 @@ sim_travel_path <- function(size,
 #' @param start_location A numeric vector giving the starting location as c(easting, northing).
 #'   Default is Vienna (16.3725042, 48.2083537)
 #' @param start_time A POSIXct giving the starting time for the paths. Default is current time.
-#' @param stay_prob A numeric between 0 and 1 giving the probability of staying at the same location.
-#'   Default is 0.2.
+#' @param stay_prob A numeric between 0 and 1 giving the probability of staying at the
+#'   same location. Default is 0.2.
 #' @param track_prefix A character string used as a prefix for track IDs. Default is "track".
 #'   Track IDs will be formatted as \code{prefix\_number}.
-#' @param format A character string, either \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
+#' @param format A character string, either \code{"trackframe"} (easting/northing),
+#'   \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #'
 #' @return Depending on the format argument either a \code{"trackframe"} or
 #'  \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.
@@ -145,15 +160,17 @@ sim_travel_path <- function(size,
 #' # Extract a specific track
 #' track2 <- select_id(multi_track, "track_2")
 #' @export
-sim_travel_paths <- function(ntracks,
-                             sizes,
-                             max_step = 0.001,
-                             time_increment = 60, # in seconds
-                             start_location = c(16.3725042, 48.2083537),
-                             start_time = as.POSIXct(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
-                             stay_prob = 0.2,
-                             track_prefix = "track",
-                             format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")) {
+sim_travel_paths <- function(
+  ntracks,
+  sizes,
+  max_step = 0.001,
+  time_increment = 60, # in seconds
+  start_location = c(16.3725042, 48.2083537),
+  start_time = as.POSIXct(format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
+  stay_prob = 0.2,
+  track_prefix = "track",
+  format = c("trackframe", "data.frame", "matrix", "sftrack", "move2")
+) {
   checkmate::assert_integerish(ntracks, lower = 1, len = 1, any.missing = FALSE)
   checkmate::assert_integerish(sizes, lower = 1, any.missing = FALSE)
   if (length(sizes) == 1L) {
@@ -165,8 +182,12 @@ sim_travel_paths <- function(ntracks,
   checkmate::assert_posixct(start_time, any.missing = FALSE)
   checkmate::assert_numeric(stay_prob, lower = 0, upper = 1, len = 1, any.missing = FALSE)
   format <- match.arg(format)
+  if (format %in% c("sftrack", "move2") && !is_pkg_installed(format)) {
+    fmt <- "'sim_travel_path' requires the package '%s' when format '%s' is chosen."
+    stop(paste(sprintf(fmt, format, format), "Please install it.", collapse = " "))
+  }
   projected_crs <- "EPSG:32632"
-  
+
   total_size <- sum(sizes)
   data <- data.frame(
     time = as.POSIXct(rep(NA, total_size)),
@@ -179,9 +200,15 @@ sim_travel_paths <- function(ntracks,
   for (i in seq_len(ntracks)) {
     end <- start + sizes[i] - 1L
     idx <- seq.int(start, end)
-    x <- sim_travel_path(size = sizes[i], max_step = max_step, time_increment = time_increment,
-                         start_location = start_location, start_time = start_time,
-                         stay_prob = stay_prob, format = "data.frame")
+    x <- sim_travel_path(
+      size = sizes[i],
+      max_step = max_step,
+      time_increment = time_increment,
+      start_location = start_location,
+      start_time = start_time,
+      stay_prob = stay_prob,
+      format = "data.frame"
+    )
     for (col in colnames(x)) {
       data[idx, col] <- x[[col]]
     }
@@ -189,50 +216,40 @@ sim_travel_paths <- function(ntracks,
     start <- end + 1L
   }
 
-  # return(as.trackframe(tf,
-  #                       id_col = "id",
-  #                       time_col = "time",
-  #                       easting_col = "easting",
-  #                       northing_col = "northing"))
-  
+  # FIXME: Duplicated code see function sim_travel_path!
   if (format == "matrix") {
     data[["id"]] <- as.integer(as.factor(data[["id"]]))
     data[["time"]] <- as.integer(data[["time"]])
     return(as.matrix(data))
   } else if (format == "sftrack") {
-    as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
-    if (inherits(as_sftrack, "try-error")) {
-      stop("package 'sftrack' is required for this function. Please install it.")
-    }
-    
-    return(as_sftrack(data,
-                      coords = c("easting", "northing"),
-                      crs = projected_crs))
+    return(sftrack::as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs))
   } else if (format == "move2") {
-    mt_as_move2 <- try(getNamespace("move2")$mt_as_move2, silent = TRUE)
-    if (inherits(mt_as_move2, "try-error")) {
-      stop("package 'move2' is required for this function. Please install it.")
-    }
-    return(mt_as_move2(data, coords = c("easting", "northing"), time_column = "time", track_id_column = "id", crs = projected_crs))
-    
-  } else if(format == "trackframe") {
+    return(move2::mt_as_move2(
+      data,
+      coords = c("easting", "northing"),
+      time_column = "time",
+      track_id_column = "id",
+      crs = projected_crs
+    ))
+  } else if (format == "trackframe") {
     as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
+    # FIXME: The dependencies are here wrong! Why should we need sftrack if we choose trackframe!
     if (inherits(as_sftrack, "try-error")) {
       stop("package 'sftrack' is required for this function. Please install it.")
     }
-    data <- as_sftrack(data,
-                       coords = c("easting", "northing"),
-                       crs = projected_crs)
-    
-    data_tf <- as.trackframe(data = data,
-                   time_col = "time",
-                   easting_col = "easting",
-                   northing_col = "northing")
-    
+    data <- as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs)
+
+    data_tf <- as.trackframe(
+      data = data,
+      time_col = "time",
+      easting_col = "easting",
+      northing_col = "northing"
+    )
+
     data_tf[["sft_group"]] <- NULL
-    data_tf[["id"]]  <- data[["id"]] 
+    data_tf[["id"]] <- data[["id"]]
     data_tf[["geometry"]] <- NULL
-    
+
     return(data_tf)
   } else {
     return(data)

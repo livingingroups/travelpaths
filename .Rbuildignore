@@ -1,4 +1,5 @@
 
+air.toml
 travelpaths_*.tar.gz
 Taskfile.yml
 ^devel$
@@ -8,3 +9,8 @@ Taskfile.yml
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^Meta$
+.quarto/
+.gitignore
+.lintr
+^doc$

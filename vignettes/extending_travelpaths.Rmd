@@ -1,0 +1,328 @@
+---
+title: "Extending travelpaths"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Extending travelpaths}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r knitr_settings, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", out.width = "100%", error = TRUE)
+if (isTRUE(as.logical(Sys.getenv("NO_EXTENDING_VIGNETTE")))) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
+```
+
+
+```{r, echo = FALSE, message = FALSE}
+suppressPackageStartupMessages(library("travelpaths"))
+data("tf_mini", package = "trackframe")
+```
+
+**travelpaths** uses a plugin system modelled after the
+[parsnip](https://parsnip.tidymodels.org/) pattern from tidymodels.
+A specification object captures what algorithm to run and with which
+parameters.  A separate registry maps each (model, mode, engine) triple to
+a concrete fitting function.  The two sides are joined at the point of
+calling `fit()`.
+
+The public API for extending the package consists of three functions:
+
+| Function | Purpose |
+|---|---|
+| `new_travelpath_spec(cls, args, eng_args, mode, engine)` | Create a new specification object |
+| `register_fit_function(model, mode, engine, fit_function)` | Register the engine specific fit function |
+| `register_argument_mapping(model, mode, engine, argument_mapping)` | Rename arguments before they are passed to the fit function |
+
+
+# Writing a specification constructor
+
+A specification constructor is a function that collects 
+parameters into a named list and passes them to `new_travelpath_spec()`.
+
+```{r}
+threshold_stops <- function(
+  mode = "segmentation",
+  engine = "infostop",
+  r1 = 10,
+  min_size = 2L,
+  min_staying_time = 300L,
+  max_time_between = 86400L,
+  output_col = "stop_id"
+) {
+  args <- list(
+    r1 = r1,
+    min_size = min_size,
+    min_staying_time = min_staying_time,
+    max_time_between = max_time_between,
+    stop_id_col = output_col
+  )
+  new_travelpath_spec(
+    "threshold_stops",
+    args = args,
+    eng_args = list(),
+    mode = mode,
+    engine = engine
+  )
+}
+```
+
+`new_travelpath_spec()` validates every argument with
+[checkmate](https://mllg.github.io/checkmate/) and returns an object
+inheriting from `"travelpath_spec"`:
+
+```{r}
+spec <- threshold_stops()
+class(spec)
+```
+
+```{r}
+str(spec)
+```
+
+- `args` holds the parameters that are present in all `threshold_stops` implementations. 
+- `eng_args` holds parameters that are engine-specific and should not be
+exposed in the constructor signature (pass `list()` when unused).
+
+
+# Registering a fit function
+
+`register_fit_function(model, mode, engine, fit_function)` adds the fit
+function to the registry so that `fit()` dispatches correctly based on
+the specification object.
+
+```{r eval=FALSE}
+register_fit_function(
+  "threshold_stops", "segmentation", "infostop", infostop::identify_stops
+)
+```
+
+The `fit_function` must accept `data` as its **first** positional argument,
+followed by keyword arguments matching the names defined in `args` and
+`eng_args`.  If the caller passes extra `...` arguments to `fit()`, they
+are appended last and override arguments from the specification.
+
+
+# Updating a specification
+
+`update.travelpath_spec()` lets callers change individual parameters
+without rebuilding the spec from scratch.
+
+```{r}
+spec |> update(r1 = 25, min_size = 3L) |> str()
+```
+
+Use `fresh = TRUE` to reset all unspecified parameters to their constructor
+defaults before applying the new values:
+
+```{r}
+# Start from threshold_stops(r1 = 99, min_size = 9L), reset everything,
+# then apply r1 = 5.
+threshold_stops(r1 = 99, min_size = 9L) |>
+  update(fresh = TRUE, r1 = 5) |> str()
+```
+
+A `params` named list is an alternative to `...` and can be combined with it:
+
+```{r}
+update(spec, params = list(r1 = 50), min_size = 4L) |> str()
+```
+
+
+# Registering an argument mapping
+
+Engine functions sometimes use different parameter names than the canonical
+travelpaths names. In this case you have two options
+
+1. write a wrapper function that does additional validation and the mapping of the arguments,
+2. if there are only small differences you can register an argument mapping.
+
+`register_argument_mapping()` declares a renaming that
+is applied automatically inside `fit()` before the call is assembled.
+
+The `argument_mapping` argument is a named character vector where each name
+is the spec-level name and the corresponding value is the engine-level name:
+
+```{r eval=FALSE}
+register_argument_mapping(
+  "change_point_permtest", "segmentation", "cpt",
+  c("n_permutations" = "n")
+)
+```
+
+With this mapping in place, a spec arg called `n_permutations` is
+renamed to `n` before being forwarded to `cpt::change_point_test`.
+
+
+# The fit() dispatch pipeline
+
+`fit.travelpath_spec()` orchestrates the following steps every time a spec
+is fitted:
+
+1. Look up the registered fit function for `(model, mode, engine)`.
+2. Build the argument list: `c(list(data), args, eng_args)`.
+3. Apply any registered argument mappings (see `register_argument_mapping()`).
+4. Merge in extra arguments supplied via `...`.
+5. Validate the assembled argument list against the fit function signature.
+6. Evaluate the call and attach a `<mode>_fit` class to the result.
+
+```{r}
+result <- fit(threshold_stops(r1 = 20), tf_mini)
+result
+```
+
+
+# Dry-run mode
+
+Passing `dry_run = TRUE` to `fit()` skips evaluation and returns the
+assembled call object instead.  This is the recommended way to verify that
+argument forwarding and renaming are working correctly without executing the
+underlying engine.
+
+```{r}
+rcall <- fit(threshold_stops(r1 = 20, min_size = 3L), tf_mini, dry_run = TRUE)
+```
+
+Convert the call to a list to inspect each element:
+
+```{r}
+str(as.list(rcall))
+```
+
+The `dry_run` flag itself is stripped from the call list so it never reaches
+the engine.
+
+Arguments passed via `...` to `fit()` are merged after the spec args, so
+they can be used to override individual values for a single call without
+modifying the spec:
+
+```{r}
+call_list_override <- as.list(
+  fit(threshold_stops(), tf_mini, dry_run = TRUE, stop_id_col = "my_stop")
+)
+call_list_override[["stop_id_col"]]
+```
+
+
+# Complete worked example
+
+The steps below show how to add a new model.
+
+1. Write a specification constructor. If a constructor already exists and only a new engine is added, this step can be omitted.
+2. Optionally wrap the engine function to handle validation or argument translation
+   before registration.
+3. Register the fit function.
+
+
+## Specification constructor
+
+The constructor collects parameters into a named list and passes them to
+`new_travelpath_spec()`. The first argument is the model name (used as a key in the registry),
+`args` holds canonical parameters shared across engines, and `eng_args` holds engine-specific
+parameters not exposed in the constructor signature.
+
+```{r}
+my_model <- function(
+  mode   = "segmentation",
+  engine = "my_engine",
+  threshold = 0.5,
+  max_gap   = 100L
+) {
+  args <- list(threshold = threshold, max_gap = max_gap)
+  new_travelpath_spec(
+    "my_model",
+    args     = args,
+    eng_args = list(),
+    mode     = mode,
+    engine   = engine
+  )
+}
+```
+
+
+## Wrapper function
+
+The wrapper function must accept `data` as its first positional argument,
+followed by the same parameter names used in `args`.
+The `...` argument allows `fit()` to forward additional arguments.
+Here engine-specific validation can be added.
+
+```{r}
+my_fit_fn <- function(data, threshold = 0.5, max_gap = 100L, ...) {
+  checkmate::assert_class(data, "trackframe")
+  checkmate::assert_numeric(threshold, lower = 0, finite = TRUE, any.missing = FALSE)
+  checkmate::assert_integerish(max_gap, lower = 0, any.missing = FALSE)
+  stop_id <- c(1, sample(c(0, 1), NROW(data) - 1, replace = TRUE))
+  data[["rand_stop_id"]] <- cumsum(stop_id)
+  return(data)
+}
+```
+
+## Register fit function
+
+Register the wrapper under the `(model, mode, engine)` triple. In a package designed to enhance
+the functionality of the travelpaths framework this call belongs in `.onLoad()`
+inside `R/zzz.R` so the registry is populated when the package is attached.
+
+```{r}
+register_fit_function("my_model", "segmentation", "my_engine", my_fit_fn)
+```
+
+## Inspect registered arguments
+
+The `arguments()` generic extracts the formal arguments of the fit function
+associated with a specification.  This is useful for verifying that the
+registered function matches what the spec expects:
+
+```{r}
+arguments(my_model())
+```
+
+## Use the model
+
+Once registered, the model can be used with the standard `fit()` interface.
+
+```{r}
+data("tf_mini")
+spec <- my_model()
+fitted <- fit(spec, tf_mini)
+fitted
+```
+
+
+# Packaging guidelines
+
+When adding models in an extension package rather than a standalone script,
+keep these points in mind:
+
+- **Register in `.onLoad()`**, not at the top level.  Place
+  `register_fit_function()` and `register_argument_mapping()` calls in
+  `R/zzz.R` inside `.onLoad()`.  This ensures the registry is populated
+  whenever the namespace is loaded.
+
+- **Guard optional engines** with `is_pkg_installed()`.  If the engine
+  package is listed under `Suggests` rather than `Imports`, wrap the
+  registration in a conditional so the package still loads when the engine
+  is absent:
+
+```{r eval=FALSE}
+.onLoad <- function(libname, pkgname) {
+  if (is_pkg_installed("infostop")) {
+    register_fit_function(
+      "my_model", "segmentation", "infostop",
+      infostop::identify_stops
+    )
+  }
+}
+```
+
+- **Startup messages** from `.onAttach()` automatically list all
+  registered models, so users see which engines are available.

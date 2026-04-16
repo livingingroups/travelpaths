@@ -11,7 +11,8 @@ subset_phase_list(phase_list, from = 1, to = length(phase_list))
 
 \item{from}{Integer. The starting index for subsetting the phase list. Defaults to `1`.}
 
-\item{to}{Integer. The ending index for subsetting the phase list. Defaults to `length(phase_list)`.}
+\item{to}{Integer. The ending index for subsetting the phase list. Defaults to
+`length(phase_list)`.}
 }
 \value{
 A subset of the phase list, with adjusted attributes:
@@ -22,7 +23,8 @@ A subset of the phase list, with adjusted attributes:
 }
 }
 \description{
-Extracts a subset of a phase list based on the specified range and adjusts related attributes (time, time unit, and Z values) accordingly.
+Extracts a subset of a phase list based on the specified range and adjusts related attributes
+(time, time unit, and Z values) accordingly.
 }
 \examples{
 \dontrun{

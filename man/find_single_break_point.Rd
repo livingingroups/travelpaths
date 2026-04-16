@@ -13,7 +13,7 @@ find_single_break_point(
   k = 1,
   method = "sweep",
   plotme = TRUE,
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -22,7 +22,7 @@ find_single_break_point(
   k = 1,
   method = "sweep",
   plotme = TRUE,
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -31,7 +31,7 @@ find_single_break_point(
   k = 1,
   method = "sweep",
   plotme = TRUE,
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -40,7 +40,7 @@ find_single_break_point(
   k = 1,
   method = "sweep",
   plotme = TRUE,
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 
@@ -49,33 +49,35 @@ find_single_break_point(
   k = 1,
   method = "sweep",
   plotme = TRUE,
-  time.units = "min",
+  time_units = "mins",
   ...
 )
 }
 \arguments{
 \item{data}{an object of class \code{trackframe}}
 
-\item{k}{tuning parameter for the smoothing of the likelihood profile spline. 
+\item{k}{tuning parameter for the smoothing of the likelihood profile spline.
 The number of knots is "length(T)/4 * k" - the lower the value of k, the smoother the spline.}
 
 \item{method}{one of "sweep" or "optimize". See details.}
 
 \item{plotme}{whether to plot the resulting likelihood (only if method is "sweep").}
 
-\item{time.units}{time units of calculations (e.g. "sec", "min", "hour", "day")}
+\item{time_units}{time units of calculations (e.g. "secs", "mins", "hours", "days")}
 
-\item{...}{additional parameters to pass to \code{\link{estimateUCVM}} function, in particular the method of estimation.  Under most conditions, fairly reliable and fast results are provided by the default \code{vLike} (velocity likelihood) method.}
+\item{...}{additional parameters to pass to \code{\link{estimateUCVM}} function, in particular
+the method of estimation.  Under most conditions, fairly reliable and fast results are provided
+by the default \code{vLike} (velocity likelihood) method.}
 }
 \description{
-Finds a single change point in UCVM parameters (time scale \eqn{tau} and rms 
+Finds a single change point in UCVM parameters (time scale \eqn{tau} and rms
 speed \eqn{eta}) of a movement.
 }
 \details{
-Two methods are provided: "sweep", which scans a set of possible 
-change points, smooths the likelihoods and selects the maximum, or "optimize" 
-which uses R's single dimension optimization algorithms to find the most 
-likely change point. The latter is faster, but can be unreliable because the 
+Two methods are provided: "sweep", which scans a set of possible
+change points, smooths the likelihoods and selects the maximum, or "optimize"
+which uses R's single dimension optimization algorithms to find the most
+likely change point. The latter is faster, but can be unreliable because the
 likelihood profiles are typically quite rough.
 }
 \examples{

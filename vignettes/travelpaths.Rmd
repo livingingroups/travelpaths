@@ -1,0 +1,159 @@
+---
+title: "Travel Paths"
+author: ""
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Travel Paths}
+  %\VignetteEngine{knitr::knitr}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r knitr_settings, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", out.width = "100%", error = TRUE)
+knitr::opts_chunk$set(eval = FALSE) # Keep for now since it takes to long to run the whole vignette.
+if (isTRUE(as.logical(Sys.getenv("NO_TRAVELPATHS_VIGNETTE")))) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
+```
+
+
+# Package **travelpaths**
+
+```{r setup, message=FALSE}
+library("travelpaths")
+library("infostop")
+
+data("path_move2", package = "trackframe")
+```
+
+
+The **travelpaths** pipline is devided into 3 steps,
+
+1. **segment**
+2. **group**
+3. **predict**
+
+
+
+## Infostop
+
+### Segment with `threshold_stops()`
+
+```{r threshold_stops_spec}
+args(threshold_stops)
+```
+
+```{r threshold_stops}
+ths_spec <- threshold_stops(
+  distance_metric = "haversine",
+  r1 = 20,
+  min_size = 3
+)
+
+stops <- fit(ths_spec, path_move2)
+head(stops)
+```
+
+```{r infomap_spec}
+args(infomap)
+```
+
+
+### Group with `infomap()`
+
+```{r infomap_sites}
+im_spec <- infomap()
+sites <- fit(im_spec, stops)
+head(sites)
+```
+
+
+## Change point test
+### Detecting change points with `change_point_permtest()`
+```{r change_point_permtest_spec}
+args(change_point_permtest)
+```
+
+```{r change_point_permtest}
+data("cpttestdata", package = "cpt")
+cpt_spec <- change_point_permtest()
+```
+
+Inspect the arguments of the change point test specification:
+```{r cpt_args}
+arguments(cpt_spec)
+```
+We might should split it into `args` and `eng_args` sections.
+Also we have to consider the mapping.
+
+```{r cpt_update}
+cpt_spec <- update(cpt_spec, q = 5, n = 10000, seed = 0)
+```
+
+```{r cpt_fit}
+cpt_tf <- fit(cpt_spec, cpttestdata)
+head(cpt_tf)
+```
+
+
+## Smoove
+
+```{r smoove_kestrel_data}
+library(smoove)
+data(Kestrel)
+k <- Kestrel[3730:4150, ]
+head(k)
+```
+
+
+```{r scan_track_example, eval=FALSE}
+# with(k, scan_track(x=X, y=Y, time = timestamp))
+```
+
+
+```{r create_trackframe}
+library(trackframe)
+data <- as.trackframe(k,
+  easting_col = "X",
+  northing_col = "Y",
+  crs = NA)
+```
+
+
+Inspect the arguments of the change point detection by cvm
+```{r cvm_change_points_spec}
+args(cvm_change_points)
+```
+
+Specify the model spec
+```{r cvm_cpt_spec}
+cpt_spec <- cvm_change_points(
+  windowsize = 50,
+  windowstep = 5,
+  model = "RACVM",
+  time_unit = "secs"
+)
+```
+
+Estimate the change points
+```{r cvm_cpt_fit}
+cpt_fit <- fit(cpt_spec, data)
+head(cpt_fit)
+```
+
+Specify the phases object
+```{r cvm_phases_spec}
+args(cvm_phases)
+
+phases_spec <- cvm_phases()
+```
+
+Fit the phases (grouping)
+```{r cvm_phases_fit}
+phases <- fit(phases_spec, cpt_fit)
+head(phases)
+```
+

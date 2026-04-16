@@ -10,11 +10,16 @@ tasks:
     cmds:
       - task --list
 
+  clean_pkg:
+    desc: Remove previous built packages
+    cmds:
+      - rm -f {{.PACKAGE_NAME}}_*.tar.gz
+
   clean:
     desc: Clean build artifacts
+    deps: [clean_pkg]
     cmds:
-      - rm -rf "{{.PACKAGE_NAME}}.Rcheck"
-      - rm -f "{{.PACKAGE_NAME}}_*.tar.gz"
+      - rm -rf {{.PACKAGE_NAME}}.Rcheck
       - rm -rf man/
       - rm -rf docs/
 
@@ -23,15 +28,33 @@ tasks:
     cmds:
       - "{{.R_CMD}} -e 'roxygen2::roxygenize(\".\", c(\"rd\", \"namespace\"))'"
 
-  build:
+  build-fast:
     desc: Build the package
     deps: [docs]
     cmds:
+      - "{{.R_CMD}} CMD build --no-build-vignettes ."
+
+  build:
+    desc: Build the package
+    deps: [docs, clean_pkg]
+    cmds:
       - "{{.R_CMD}} CMD build ."
 
-  install:
+  fbuild:
+    desc: Build the package fast
+    deps: [docs, clean_pkg]
+    cmds:
+      - "{{.R_CMD}} CMD build --no-build-vignettes ."
+
+  inst:
     desc: Install the package locally
     deps: [build]
+    cmds:
+      - "{{.R_CMD}} CMD INSTALL {{.PACKAGE_NAME}}_*.tar.gz"
+
+  finst:
+    desc: Install the package locally
+    deps: [fbuild]
     cmds:
       - "{{.R_CMD}} CMD INSTALL {{.PACKAGE_NAME}}_*.tar.gz"
 
@@ -52,3 +75,27 @@ tasks:
     cmds:
       - "{{.R_CMD}} CMD check --as-cran {{.PACKAGE_NAME}}_*.tar.gz"
 
+  vignette:
+    desc: Build vignettes
+    cmds:
+      - "{{.R_CMD}} -e 'devtools::build_vignettes()'"
+
+  vignette_extending:
+    desc: Extract vignettes
+    env:
+      NO_SMOOVE_VIGNETTE: "TRUE"
+      NO_TRAVELPATHS_VIGNETTE: "TRUE"
+    cmds:
+      - "{{.R_CMD}} -e 'devtools::build_vignettes()'"
+
+  test:
+    desc: Run Test
+    cmds:
+      - "{{.R_CMD}} -f 'tests/tinytest.R'"
+
+  test_smoke:
+    desc: Run Test
+    env:
+      TINYTEST_SMOKE: "TRUE"
+    cmds:
+      - "{{.R_CMD}} -f 'tests/tinytest.R'"

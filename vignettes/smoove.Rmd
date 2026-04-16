@@ -1,0 +1,109 @@
+---
+title: "Smoove"
+author: ""
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Smoove}
+  %\VignetteEngine{knitr::knitr}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", out.width = "100%", error = TRUE)
+knitr::opts_chunk$set(eval = FALSE) # Keep for now since it takes to long to run the whole vignette.
+if (isTRUE(as.logical(Sys.getenv("NO_SMOOVE_VIGNETTE")))) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
+```
+
+## R Markdown
+
+load Packages
+```{r include=FALSE}
+library(travelpaths)
+library(trackframe)
+library(smoove)
+```
+
+load Kestrel data from R package smoove
+```{r}
+data(Kestrel)
+k <- Kestrel[3730:4150, ]
+```
+
+
+```{r}
+data <- as.trackframe(k,
+  easting_col = "X",
+  northing_col = "Y",
+  crs = NA)
+```
+
+Plot data
+```{r}
+plot(data)
+```
+
+Plot Coordinates by time
+```{r}
+plot_coords_by_time(data)
+```
+
+
+```{r}
+args(cvm_change_points)
+
+cpt_spec <- cvm_change_points(
+  windowsize = 50,
+  windowstep = 5,
+  model = "RACVM",
+  time_unit = "secs",
+  progress = FALSE
+)
+
+cpt_fit <- fit(cpt_spec, data)
+head(cpt_fit)
+class(cpt_fit)
+
+args(cvm_phases)
+
+phases_spec <- cvm_phases()
+phases <- fit(phases_spec, cpt_fit)
+
+class(phases)
+###
+```
+
+Plot coordinates by time with change points
+```{r}
+plot_coords_by_time(data, change_point_id = "cp_id")
+```
+
+
+```{r}
+plot(x = phases, start_point = TRUE, end_point = TRUE, direction = FALSE,
+  change_point_id = "cp_id")
+```
+
+
+
+
+```{r}
+plot_phases(phases)
+```
+
+
+```{r}
+summarize_phases(phases)
+```
+
+or directly phase list stored in attributes
+```{r}
+phase_list <- attr(phases, "cvm_phases")
+summarizePhases(phase_list)
+plot_phases(phase_list)
+summarize_phases(phase_list)
+```
+

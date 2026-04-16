@@ -1,62 +1,12 @@
-#' @import trackframe
-#' @importFrom checkmate assert_choice check_class
+#' @import trackframe smoove
+#' @importFrom checkmate assert_choice  assert_string assert_function assert_character
 #' @importFrom sf st_coordinates
-# #' @importFrom sftrack as_sftrack
-# #' @importFrom move2 mt_as_move2
 #' @importFrom zoo index
 #' @importFrom gplots rich.colors
 #' @importFrom scales alpha
 #' @importFrom graphics legend par points mtext title
-#' @importFrom stats acf runif
-
+#' @importFrom stats acf runif time
+#' @importFrom generics fit
+#' @importFrom utils capture.output str as.roman
+#' @importFrom intervals clusters
 NULL
-
-#' Simulated Travel Path
-#'
-#' matrix created with sim_travel_path().
-"travel_path_matrix"
-
-#' Simulated Travel Path
-#'
-#' data.frame created with sim_travel_path().
-"travel_path_data_frame"
-
-#' Simulated Travel Path
-#'
-#' trackframe created with sim_travel_path().
-"travel_path_trackframe"
-
-#' Simulated Travel Path
-#'
-#' sftrack object created with sim_travel_path().
-"travel_path_sftrack"
-
-#' Simulated Travel Path
-#'
-#' move2 object created with sim_travel_path().
-"travel_path_move2"
-
-#' Simulated Travel Path with multiple IDs
-#'
-#' matrix created with sim_travel_paths().
-"travel_paths_matrix"
-
-#' Simulated Travel Path with multiple IDs
-#'
-#' data.frame created with sim_travel_paths().
-"travel_paths_data_frame"
-
-#' Simulated Travel Path with multiple IDs
-#'
-#' trackframe created with sim_travel_paths().
-"travel_paths_trackframe"
-
-#' Simulated Travel Path with multiple IDs
-#'
-#' sftrack object created with sim_travel_paths().
-"travel_paths_sftrack"
-
-#' Simulated Travel Path with multiple IDs
-#'
-#' move2 object created with sim_travel_paths().
-"travel_paths_move2"
