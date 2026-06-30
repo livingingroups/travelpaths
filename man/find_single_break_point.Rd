@@ -57,16 +57,21 @@ find_single_break_point(
 \item{data}{an object of class \code{trackframe}}
 
 \item{k}{tuning parameter for the smoothing of the likelihood profile spline.
-The number of knots is "length(T)/4 * k" - the lower the value of k, the smoother the spline.}
+The number of knots is "length(T)/4 * k" - the lower the value of k, the
+smoother the spline.}
 
 \item{method}{one of "sweep" or "optimize". See details.}
 
-\item{plotme}{whether to plot the resulting likelihood (only if method is "sweep").}
+\item{plotme}{whether to plot the resulting likelihood (only if method is
+"sweep").}
 
-\item{time_units}{time units of calculations (e.g. "secs", "mins", "hours", "days")}
+\item{time_units}{time units of calculations (e.g. "secs", "mins",
+"hours", "days")}
 
-\item{...}{additional parameters to pass to \code{\link{estimateUCVM}} function, in particular
-the method of estimation.  Under most conditions, fairly reliable and fast results are provided
+\item{...}{additional parameters to pass to
+  \code{\link{estimateUCVM}} function, in particular the method of
+  estimation. Under most conditions, fairly reliable and fast results are
+  provided
 by the default \code{vLike} (velocity likelihood) method.}
 }
 \description{

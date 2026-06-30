@@ -26,8 +26,9 @@ smoove_estimate_ucvm <- smoove::estimateUCVM(z, z_t, time.units = "min")
 travelpaths_estimate_ucvm <- estimate_ucvm(tf)
 expect_equal(travelpaths_estimate_ucvm, smoove_estimate_ucvm)
 
-smoove_estimate_ucvm2 <- smoove::estimateUCVM(z, z_t, method = "vLike", time.units = "min",
-  CI = TRUE)
+smoove_estimate_ucvm2 <- smoove::estimateUCVM(
+  z, z_t, method = "vLike", time.units = "min", CI = TRUE
+)
 travelpaths_estimate_ucvm2 <- estimate_ucvm(tf, ci = TRUE)
 expect_equal(travelpaths_estimate_ucvm2, smoove_estimate_ucvm2)
 
@@ -42,7 +43,9 @@ tf_equi <- sim_travel_path(
 z_equi <- cbind(easting(tf_equi), northing(tf_equi))
 t_equi <- as.POSIXct(time(tf_equi))
 
-smoove_estimate_ucvm_vaf <- smoove::estimateUCVM(z_equi, t_equi, method = "vaf", time.units = "min")
+smoove_estimate_ucvm_vaf <- smoove::estimateUCVM(
+  z_equi, t_equi, method = "vaf", time.units = "min"
+)
 travelpaths_estimate_ucvm_vaf <- estimate_ucvm(tf_equi, method = "vaf")
 expect_equal(travelpaths_estimate_ucvm_vaf, smoove_estimate_ucvm_vaf)
 expect_error(estimate_ucvm(tf, method = "vaf"))
@@ -55,7 +58,7 @@ smoove_estimate_ucvm_crw2 <- smoove::estimateUCVM(z, z_t, method = "crw", time.u
 travelpaths_estimate_ucvm_crw2 <- estimate_ucvm(tf, method = "crw")
 expect_equal(travelpaths_estimate_ucvm_crw2, smoove_estimate_ucvm_crw2)
 
-smoove_estimate_ucvm_zlike <- smoove::estimateUCVM(z, z_t, method = "zLike", time.units = "min") #nolint
+smoove_estimate_ucvm_zlike <- smoove::estimateUCVM(z, z_t, method = "zLike", time.units = "min") # nolint
 tp_estimate_ucvm_zlike <- estimate_ucvm(tf, method = "zLike")
 expect_equal(tp_estimate_ucvm_zlike, smoove_estimate_ucvm_zlike)
 
@@ -99,24 +102,33 @@ smoove_estimate_racvm <- smoove::estimateRACVM(z, z_t, time.units = "min")
 travelpaths_estimate_racvm <- estimate_racvm(tf)
 expect_equal(travelpaths_estimate_racvm, smoove_estimate_racvm)
 
-smoove_estimate_racvm_ucvm <- smoove::estimateRACVM(z, z_t, time.units = "min", model = "UCVM")
+smoove_estimate_racvm_ucvm <- smoove::estimateRACVM(
+  z, z_t, time.units = "min", model = "UCVM"
+)
 travelpaths_estimate_ucvm <- estimate_racvm(tf, model = "UCVM")
 expect_equal(travelpaths_estimate_ucvm, smoove_estimate_racvm_ucvm)
 
-smoove_estimate_racvm_acvm <- smoove::estimateRACVM(z, z_t, time.units = "min", model = "ACVM")
+smoove_estimate_racvm_acvm <- smoove::estimateRACVM(
+  z, z_t, time.units = "min", model = "ACVM"
+)
 travelpaths_estimate_acvm <- estimate_racvm(tf, model = "ACVM")
 expect_equal(travelpaths_estimate_acvm, smoove_estimate_racvm_acvm)
 
-smoove_estimate_racvm_rcvm <- smoove::estimateRACVM(z, z_t, time.units = "min", model = "RCVM")
+smoove_estimate_racvm_rcvm <- smoove::estimateRACVM(
+  z, z_t, time.units = "min", model = "RCVM"
+)
 travelpaths_estimate_rcvm <- estimate_racvm(tf, model = "RCVM")
 expect_equal(travelpaths_estimate_rcvm, smoove_estimate_racvm_rcvm)
 
-
-#sweep_racvm
-smooce_sweep_racvm <- smoove::sweepRACVM(z_df, t_df, windowsize = 1000, windowstep = 1000,
-  model = "UCVM", progress = FALSE, time.unit = "mins", .parallel = FALSE)
-tp_sweep_racvm <- sweep_racvm(df, windowsize = 1000, windowstep = 1000, model = "UCVM",
-  progress = FALSE, time_unit = "mins", .parallel = FALSE)
+# sweep_racvm
+smooce_sweep_racvm <- smoove::sweepRACVM(z_df, t_df,
+  windowsize = 1000, windowstep = 1000,
+  model = "UCVM", progress = FALSE, time.unit = "mins", .parallel = FALSE
+)
+tp_sweep_racvm <- sweep_racvm(df,
+  windowsize = 1000, windowstep = 1000, model = "UCVM",
+  progress = FALSE, time_unit = "mins", .parallel = FALSE
+)
 expect_equal(tp_sweep_racvm, smooce_sweep_racvm)
 
 # test_cp

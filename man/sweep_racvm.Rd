@@ -66,32 +66,34 @@ sweep_racvm(
 \arguments{
 \item{data}{an object of class \code{trackframe}}
 
-\item{windowsize}{time window of analysis to scan, IMPORTANTLY: in units of time (T).}
+\item{windowsize}{time window of analysis to scan, IMPORTANTLY: in units of
+time (T).}
 
-\item{windowstep}{step (in time) by which the window advances.  The smaller the step, the slower
-but more thorough the estimation.}
+\item{windowstep}{step (in time) by which the window advances. The smaller
+the step, the slower but more thorough the estimation.}
 
-\item{model}{model to fit for the change point sweep - typically the most complex model in the
-candidate model set.}
+\item{model}{model to fit for the change point sweep - typically the most
+complex model in the candidate model set.}
 
 \item{progress}{whether or not to show a progress bar}
 
-\item{time_unit}{of the windowsize AND the windowstep. The default is "hours" - can be any of
-"secs", "mins", "hours", "days", "weeks" (See \code{\link[base]{difftime}}). Ignored if time is
-not POSIX.}
+\item{time_unit}{of the windowsize AND the windowstep. The default is
+"hours" - can be any of "secs", "mins", "hours", "days", "weeks" (See
+\code{\link[base]{difftime}}). Ignored if time is not POSIX.}
 
-\item{.parallel}{if set TRUE, will use \code{\link[foreach]{foreach}} to parallelize the
-optimization. Requires establishing the}
+\item{.parallel}{if set TRUE, will use \code{\link[foreach]{foreach}} to
+parallelize the optimization. Requires establishing the}
 
-\item{...}{additional parameters to pass to the \code{\link{estimate_racvm}} function, notably
-the option "criterion" allows you to select models based on AIC or BIC (the former is more
-liberal with more complex models).}
+\item{...}{additional parameters to pass to the \code{\link{estimate_racvm}}
+function, notably the option "criterion" allows you to select models based
+on AIC or BIC (the former is more liberal with more complex models).}
 }
 \description{
-Sets a window (a subset of movement data within specific time window), computes likelihoods for
-a set of candidate change points within the window, and steps the window forward, filling out a
-likelihood matrix.
+Sets a window (a subset of movement data within specific time window),
+  computes likelihoods for a set of candidate change points within the
+  window, and steps the window forward, filling out a likelihood matrix.
 }
 \seealso{
-\code{\link{plotWindowSweep}}, \code{\link{estimate_racvm}}, \code{\link{test_cp}}
+\code{\link{plotWindowSweep}}, \code{\link{estimate_racvm}},
+  \code{\link{test_cp}}
 }

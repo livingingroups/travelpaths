@@ -7,9 +7,10 @@
 summarize_phases(x)
 }
 \arguments{
-\item{x}{an object of class trackframe containing a cvm phases object in the attributes or a
-phase list}
+\item{x}{an object of class trackframe containing a cvm phases object in
+the attributes or a phase list}
 }
 \description{
-Takes a phase list and obtains a tidy table of point estimates of relevant parameters,
+Takes a phase list and obtains a tidy table of point estimates of
+  relevant parameters.
 }

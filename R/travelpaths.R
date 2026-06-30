@@ -4,13 +4,14 @@
 #' This function is used to verify that the arguments provided via
 #' `object[["args"]]` and `object[["eng_args"]]` actually match
 #' the signature of the function.
-#' First it checks that all required arugments are provided.
+#' First it checks that all required arguments are provided.
 #' Second it checks (if the function has no varargs) that no arguments
 #' are provided that are not present in the function signature.
 #'
 #' @param fun a function to validate arguments against.
 #' @param fun_args a list of arguments (positional and/or named) to validate.
-#' @return `NULL` invisibly; stops with an error if arguments are invalid.
+#' @return `NULL` stops with an error if arguments are invalid and returns `NULL` otherwise.
+#'
 #' @keywords internal
 #' @noRd
 validate_function_arguments <- function(fun, fun_args) {
@@ -82,21 +83,30 @@ map_arguments <- function(object, fit_args) {
 #' This function serves as the main interface for fitting travelpath models.
 #' It performs the following steps:
 #'
-#' 1. Validates the specification object
-#' 2. Determines the appropriate fitting function based on the model, mode, and engine
-#' 3. Calls the fitting function with the data and specification parameters
+#' 1. Validates the specification object.
+#' 2. Determines the appropriate fitting function based on the model, mode, and
+#'    engine.
+#' 3. Calls the fitting function with the data and specification parameters.
 #'
 #' The fitting function is retrieved using the model registry system, which
 #' maps combinations of model types, modes, and engines to their corresponding
 #' implementation functions.
 #'
-#' @return The return value depends on the specific model and engine used:
-#' - For stop detection models: Returns the input data with added stop identifiers
-#' - For site identification models: Returns the input data with added site identifiers
-#' - For changepoint models: Returns segmentation information
+#' @return An object of class `"travelpath_fit"`, which is a list containing:
+#' \describe{
+#'   \item{spec}{The original specification storing the options used to fit.}
+#'   \item{fit}{The original fit output from the engine, stored as-is.}
+#'   \item{preproc}{A list of preprocessing artifacts (reserved for future use).}
+#'   \item{elapsed}{
+#'      An object of class \code{"proc_time"}, as returned by \code{\link[base]{proc.time}})
+#'      giving how long the fit took.
+#'   }
+#'   \item{meta}{An optional list for storing additional information.}
+#' }
 #'
 #' @examples
 #' \dontrun{
+#' # FIXME: Activate this example based on the example in tinytest.
 #' # Fit a threshold stops model
 #' stops_spec <- threshold_stops(r1 = 20, min_size = 3)
 #' result <- fit(stops_spec, movement_data)
@@ -129,8 +139,8 @@ fit.travelpath_spec <- function(
     )
     stop(msg)
   }
-  # NOTE: We don't do strict checks on data here, we expect the function fit
-  #       dispatches to, to do the input validation.
+  # We don't do strict checks on the data here, we expect the function fit
+  # dispatches too, to do the input validation.
   checkmate::assert_true(!is.null(data))
 
   control <- list(...)
@@ -155,23 +165,16 @@ fit.travelpath_spec <- function(
     return(rcall)
   }
   mode(rcall) <- "call"
-  result <- eval(rcall)
-  class_addon <- sprintf("%s_fit", object[["mode"]])
-  class(result) <- c(class_addon, class(result))
-  result
+
+  start_time <- proc.time()
+  fitted <- eval(rcall)
+  elapsed <- proc.time() - start_time
+
+  new_travelpath_fit(
+    spec = object,
+    fit = fitted[["fit"]],
+    elapsed = elapsed,
+    preproc = fitted[["preproc"]] %||% list(),
+    meta = fitted[["meta"]]
+  )
 }
-
-
-#
-# FIXME: This would be more similar to tidymodels style.
-#
-# mode(rcall) <- "call"
-# result <- list(
-#   spec = object
-# )
-# start_time <- proc.time()
-# result[["fit"]] <- eval(rcall)
-# result[["elapsed"]] <- proc.time() - start_time
-# model_class <- sprintf("%s_fit", object[["mode"]])
-# class(result) <- c(sprintf("_%s", class(result[["fit"]])), model_class)
-# result

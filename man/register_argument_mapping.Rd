@@ -9,14 +9,15 @@ register_argument_mapping(model, mode, engine, argument_mapping)
 \arguments{
 \item{model}{a character string giving the model name, e.g., `"threshold_stops"`.}
 
-\item{mode}{a character string giving the mode, currently `"segmentation"` and `"grouping"`
-are supported.}
+\item{mode}{a character string giving the mode (currently `"segmentation"`
+and `"grouping"` are supported).}
 
 \item{engine}{a character string giving the engine, e.g., `"smoove"`.}
 
 \item{argument_mapping}{a named character vector mapping the names used in
-`object[["args"]]` to the actual argument names expected by the fit function.
-The format is `c("old_name_1" = "new_name_1", "old_name_2" = "new_name_2", ...)`.}
+`object[["args"]]` to the actual argument names expected by the fit
+function. The format is `c("old_name_1" = "new_name_1",
+"old_name_2" = "new_name_2", ...)`.}
 }
 \value{
 Invisible `NULL`.

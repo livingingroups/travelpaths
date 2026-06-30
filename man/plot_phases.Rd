@@ -15,21 +15,23 @@ plot_phases(
 )
 }
 \arguments{
-\item{x}{an object of class trackframe containing a cvm phases object in the attributes or a
-phase list}
+\item{x}{an object of class trackframe containing a cvm phases object in
+the attributes or a phase list}
 
-\item{cols}{colors for phases (by default uses the `rich.colors` palette from `gplots`)}
+\item{cols}{colors for phases (by default uses the `rich.colors` palette
+from `gplots`)}
 
 \item{plot.parameters}{whether the parameters are plotted}
 
-\item{parameters}{which parameters to plot (by default - ALL of the estimated parameters)}
+\item{parameters}{which parameters to plot (by default - ALL of the
+estimated parameters)}
 
 \item{plot_legend}{whether to plot a legend}
 
 \item{legend_where}{location of legend}
 
-\item{layout}{"horizontal" (default) or "vertical"- as preferred (partial string matching
-accepted)}
+\item{layout}{"horizontal" (default) or "vertical" - as preferred (partial
+string matching accepted)}
 }
 \description{
 Plot Phases

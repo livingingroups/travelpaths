@@ -7,12 +7,13 @@
 new_travelpath_spec(cls, args, eng_args, mode, engine)
 }
 \arguments{
-\item{cls}{a character string for the class of the specification (e.g., "stop_detection").}
+\item{cls}{a character string for the class of the specification (e.g.,
+"stop_detection").}
 
 \item{args}{a list of main arguments for the specification.}
 
-\item{eng_args}{a list of engine-specific arguments, will be typically an empty `list()` or
-`NULL` when creating a new specification.}
+\item{eng_args}{a list of engine-specific arguments, typically an empty
+`list()` or `NULL` when creating a new specification.}
 
 \item{mode}{a character string for the type of travel path analysis.
 Possible values are "segmentation" or "grouping" or "unknown".}

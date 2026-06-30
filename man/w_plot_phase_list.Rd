@@ -15,33 +15,35 @@ w_plot_phase_list(
 )
 }
 \arguments{
-\item{phaselist}{A list containing phase data with attributes `Z` (complex numbers for
-positions), `time` (timestamps), and phase information.}
+\item{phaselist}{A list containing phase data with attributes `Z` (complex
+numbers for positions), `time` (timestamps), and phase information.}
 
 \item{cols}{A vector of colors for each phase. Defaults to
 `gplots::rich.colors(length(phaselist))`.}
 
-\item{plot.parameters}{Logical. If `TRUE`, plots associated phase parameters. Defaults to
-`TRUE`.}
+\item{plot.parameters}{Logical. If `TRUE`, plots associated phase
+parameters. Defaults to `TRUE`.}
 
-\item{parameters}{A character vector specifying which parameters to plot (e.g.,
-`c("eta", "tau")`). If `NULL`, defaults to commonly used parameters found in the phase table.}
+\item{parameters}{A character vector specifying which parameters to plot
+(e.g., `c("eta", "tau")`). If `NULL`, defaults to commonly used parameters
+found in the phase table.}
 
-\item{plot.legend}{Logical. If `TRUE`, displays a legend for phase names and models. Defaults
-to `TRUE`.}
+\item{plot.legend}{Logical. If `TRUE`, displays a legend for phase names and
+models. Defaults to `TRUE`.}
 
-\item{legend_where}{Position of the legend. Options include `"bottomright"`, `"topleft"`, etc.
-Defaults to `"bottomright"`.}
+\item{legend_where}{Position of the legend. Options include `"bottomright"`,
+`"topleft"`, etc. Defaults to `"bottomright"`.}
 
-\item{layout}{Layout of parameter plots. Either `"horizontal"` or `"vertical"`. Defaults to
-`"horizontal"`.}
+\item{layout}{Layout of parameter plots. Either `"horizontal"` or
+`"vertical"`. Defaults to `"horizontal"`.}
 }
 \value{
 Generates visual plots of phases and associated parameters.
 }
 \description{
-This function visualizes phase data contained within a list, along with optional parameter
-plots, color-coded by phase. It supports customizable legends and layouts.
+This function visualizes phase data contained within a list, along with
+  optional parameter plots, color-coded by phase. It supports customizable
+  legends and layouts.
 }
 \examples{
 \dontrun{

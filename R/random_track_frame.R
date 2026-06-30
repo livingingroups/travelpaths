@@ -1,27 +1,30 @@
 #' Generate Random Travel Path
 #'
-#' This function generates a random travel path with coordinates (easting/northing for format
-#' trackframe and northing/easting else) and time values.
-#' The path can include stationary periods and movements with configurable parameters.
-#' The following output formats are supported:
-#' \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or
-#'  \code{"move2"}.
+#' This function generates a random travel path with coordinates
+#'   (easting/northing for format trackframe and northing/easting else) and
+#'   time values. The path can include stationary periods and movements with
+#'   configurable parameters. The following output formats are supported:
+#'   \code{"trackframe"} (easting/northing), \code{"data.frame"},
+#'   \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #'
 #' @param size An integer giving the number of points to generate in the path.
-#' @param max_step A numeric giving the maximum step size in degrees for each movement.
-#'   Default is 0.001.
-#' @param time_increment A numeric giving the time between consecutive points in seconds.
-#'   Default is 60 (1 minute).
-#' @param start_location A numeric vector giving the starting location as c(easting, northing).
-#'   Default is Vienna (16.3725042, 48.2083537).
-#' @param start_time A POSIXct giving the starting time for the path. Default is current time.
-#' @param stay_prob A numeric giving the probability of staying at the same location (0-1).
-#'   Default is 0.2.
-#' @param format A character string, either \code{"trackframe"} (easting/northing),
-#'   \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
+#' @param max_step A numeric giving the maximum step size in degrees for each
+#'   movement. Default is 0.001.
+#' @param time_increment A numeric giving the time between consecutive points
+#'   in seconds. Default is 60 (1 minute).
+#' @param start_location A numeric vector giving the starting location as
+#'   c(easting, northing). Default is Vienna (16.3725042, 48.2083537).
+#' @param start_time A POSIXct giving the starting time for the path. Default
+#'   is current time.
+#' @param stay_prob A numeric giving the probability of staying at the same
+#'   location (0-1). Default is 0.2.
+#' @param format A character string, either \code{"trackframe"}
+#'   (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"}
+#'   or \code{"move2"}.
 #'
 #' @return Depending on the format argument either a \code{"trackframe"} or
-#'  \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.
+#'   \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or
+#'   \code{"move2"}.
 #'
 #' @examples
 #' data <- sim_travel_path(100, format = "matrix")
@@ -119,34 +122,37 @@ sim_travel_path <- function(
 
 #' Generate Multiple Random Travel Paths
 #'
-#' This function creates multiple random travel paths and combines them into a single object.
-#' Each path is assigned coordinates (easting/northing for format trackframe and northing/easting
-#' else) and time values and a unique track ID.
-#' Each path can include stationary periods and movements with configurable parameters.
-#' The following output formats are supported:
-#' \code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or
-#' \code{"move2"}.
+#' This function creates multiple random travel paths and combines them into
+#'   a single object. Each path is assigned coordinates (easting/northing for
+#'   format trackframe and northing/easting else) and time values and a unique
+#'   track ID. Each path can include stationary periods and movements with
+#'   configurable parameters. The following output formats are supported:
+#'   \code{"trackframe"} (easting/northing), \code{"data.frame"},
+#'   \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 #'
 #'
 #' @param ntracks An integer specifying the number of tracks to generate.
-#' @param sizes An integer vector specifying the number of points for each track. If a single value
-#'   is provided, it will be repeated for all tracks.
-#' @param max_step A numeric value specifying the maximum step size for random movements.
-#'   Default is 0.001 (approximately 100m at the equator).
-#' @param time_increment A numeric giving the time between consecutive points in seconds.
-#'   Default is 60 (1 minute).
-#' @param start_location A numeric vector giving the starting location as c(easting, northing).
-#'   Default is Vienna (16.3725042, 48.2083537)
-#' @param start_time A POSIXct giving the starting time for the paths. Default is current time.
-#' @param stay_prob A numeric between 0 and 1 giving the probability of staying at the
-#'   same location. Default is 0.2.
-#' @param track_prefix A character string used as a prefix for track IDs. Default is "track".
-#'   Track IDs will be formatted as \code{prefix\_number}.
-#' @param format A character string, either \code{"trackframe"} (easting/northing),
-#'   \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
+#' @param sizes An integer vector specifying the number of points for each
+#'   track. If a single value is provided, it will be repeated for all tracks.
+#' @param max_step A numeric value specifying the maximum step size for random
+#'   movements. Default is 0.001 (approximately 100m at the equator).
+#' @param time_increment A numeric giving the time between consecutive points
+#'   in seconds. Default is 60 (1 minute).
+#' @param start_location A numeric vector giving the starting location as
+#'   c(easting, northing). Default is Vienna (16.3725042, 48.2083537)
+#' @param start_time A POSIXct giving the starting time for the paths. Default
+#'   is current time.
+#' @param stay_prob A numeric between 0 and 1 giving the probability of staying
+#'   at the same location. Default is 0.2.
+#' @param track_prefix A character string used as a prefix for track IDs.
+#'   Default is "track". Track IDs will be formatted as \code{prefix\_number}.
+#' @param format A character string, either \code{"trackframe"}
+#'   (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"}
+#'   or \code{"move2"}.
 #'
 #' @return Depending on the format argument either a \code{"trackframe"} or
-#'  \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.
+#'   \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or
+#'   \code{"move2"}.
 #'
 #' @examples
 #' # Generate 3 tracks with different sizes

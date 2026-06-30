@@ -26,16 +26,19 @@ method_id <- function(model, mode, engine) {
 
 #' Register a new fit function
 #'
-#' @param model a character string giving the model name, e.g., `"threshold_stops"`.
-#' @param mode a character string giving the mode, currently `"segmentation"` and `"grouping"` are supported.
-#' @param engine a character string giving the engine, e.g., `smoove`.
-#' @param fit_function A function to be used for fitting.
+#' @param model a character string giving the model name, e.g.,
+#'   `"threshold_stops"`.
+#' @param mode a character string giving the mode, currently `"segmentation"`
+#'   and `"grouping"` are supported.
+#' @param engine a character string giving the engine, e.g., `"smoove"`.
+#' @param fit_function a function to be used for fitting.
 #'
 #' @return Invisible `NULL`.
 #'
 #' @examples
 #' \dontrun{
-#' register_fit_function("threshold_stops", "segmentation", "infostop", infostop::identify_stops)
+#' register_fit_function("threshold_stops", "segmentation", "infostop",
+#'   infostop::identify_stops)
 #' }
 #'
 #' @export
@@ -58,19 +61,17 @@ register_fit_function <- function(model, mode, engine, fit_function) {
 
 
 registered_fit_functions <- function() {
-  # meta_db <- getNamespace("travelpaths")$meta_db
   meta_db[["fit_functions"]]
 }
 
 
-#' Get the fit function for a model specification
-#'
-#' @param object an object inheriting from class `travelpath_spec`.
-#'
-#' @return The fit function associated with the model specification.
-#'
-#' @keywords internal
-#' @noRd
+# Get the fit function for a model specification
+#
+# @param object an object inheriting from class `travelpath_spec`.
+#
+# @return The fit function associated with the model specification.
+#
+# @noRd
 get_fit_function <- function(object) {
   assert_spec(object)
   id <- method_id(model = class(object)[1], mode = object[["mode"]], engine = object[["engine"]])
@@ -78,20 +79,16 @@ get_fit_function <- function(object) {
 }
 
 
-# This later should be exported.
-# The idea is to have a mapping between object[["args"]] and the actual
-# argument names used in the fit function.
-
-
 #' Register an argument mapping for a model specification
 #'
 #' @param model a character string giving the model name, e.g., `"threshold_stops"`.
-#' @param mode a character string giving the mode, currently `"segmentation"` and `"grouping"`
-#'   are supported.
+#' @param mode a character string giving the mode (currently `"segmentation"`
+#'   and `"grouping"` are supported).
 #' @param engine a character string giving the engine, e.g., `"smoove"`.
 #' @param argument_mapping a named character vector mapping the names used in
-#'   `object[["args"]]` to the actual argument names expected by the fit function.
-#'   The format is `c("old_name_1" = "new_name_1", "old_name_2" = "new_name_2", ...)`.
+#'   `object[["args"]]` to the actual argument names expected by the fit
+#'   function. The format is `c("old_name_1" = "new_name_1",
+#'   "old_name_2" = "new_name_2", ...)`.
 #'
 #' @return Invisible `NULL`.
 #'

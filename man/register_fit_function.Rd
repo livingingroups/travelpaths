@@ -7,13 +7,15 @@
 register_fit_function(model, mode, engine, fit_function)
 }
 \arguments{
-\item{model}{a character string giving the model name, e.g., `"threshold_stops"`.}
+\item{model}{a character string giving the model name, e.g.,
+`"threshold_stops"`.}
 
-\item{mode}{a character string giving the mode, currently `"segmentation"` and `"grouping"` are supported.}
+\item{mode}{a character string giving the mode, currently `"segmentation"`
+and `"grouping"` are supported.}
 
-\item{engine}{a character string giving the engine, e.g., `smoove`.}
+\item{engine}{a character string giving the engine, e.g., `"smoove"`.}
 
-\item{fit_function}{A function to be used for fitting.}
+\item{fit_function}{a function to be used for fitting.}
 }
 \value{
 Invisible `NULL`.
@@ -23,7 +25,8 @@ Register a new fit function
 }
 \examples{
 \dontrun{
-register_fit_function("threshold_stops", "segmentation", "infostop", infostop::identify_stops)
+register_fit_function("threshold_stops", "segmentation", "infostop",
+  infostop::identify_stops)
 }
 
 }

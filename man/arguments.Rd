@@ -17,8 +17,8 @@ A pairlist of formal arguments from the associated function,
 }
 \description{
 This method extracts the formal arguments of an object.
-For objects of `travelpath_spec` extracts the formal arguments of the fitting function
-associated with a travelpath specification object.
+For objects of `travelpath_spec` extracts the formal arguments of the
+fitting function associated with a travelpath specification object.
 }
 \examples{
 spec <- threshold_stops()

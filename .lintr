@@ -2,9 +2,9 @@ linters: linters_with_defaults(
         quotes_linter = NULL,
         return_linter = NULL,
         indentation_linter = NULL, # handled by air, https://github.com/r-lib/lintr/issues/2960
-        object_length_linter(length = 50L),
-        line_length_linter(100),
-        object_name_linter(
+        object_length_linter = object_length_linter(length = 50L),
+        line_length_linter = line_length_linter(length = 100L),
+        object_name_linter = object_name_linter(
             styles = c("snake_case", "symbols"),
             regexes = c("^as\\.[a-z]*$", "^is\\.[a-z]*$")
         )

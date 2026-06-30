@@ -99,3 +99,7 @@ tasks:
       TINYTEST_SMOKE: "TRUE"
     cmds:
       - "{{.R_CMD}} -f 'tests/tinytest.R'"
+
+  test_local:
+    cmds:
+      - "{{.R_CMD}} --quiet -e 'travelpaths:::dev_run_tests()'"

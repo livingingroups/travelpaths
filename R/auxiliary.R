@@ -1,12 +1,40 @@
 
+# Swap Strings
+#
+# Swap character strings within a character vector.
+#
+# @param x a character vector.
+# @param ... key value arguments to be swapped.
+#            The syntax is always \code{from = to}.
+#
+# @examples
+# swap(c("bird", "fox", "dog"), fox = "cat", bird = "penguin")
+swap <- function(x, ...) {
+  checkmate::assert_character(x)
+  kwargs <- c(...)
+  if (length(kwargs) == 0L) return(x)
+  keys <- names(kwargs)
+  values <- unname(kwargs)
+  checkmate::assert_character(keys, any.missing = FALSE)
+  checkmate::assert_character(values, any.missing = FALSE)
+  if (all(keys == values)) return(x)
+  for (i in seq_along(kwargs)) {
+    idx <- which(x == keys[i])
+    if (length(idx) > 0) {
+      x[idx] <- values[i]
+    }
+  }
+  x
+}
 
-#' @param old a named list to update.
-#' @param new a named list of new values.
-#' @param method `"union"` updates all keys from `new`; `"intersect"` updates only keys present
-#'   in both.
-#' @return the updated list `old`.
-#' @keywords internal
-#' @noRd
+
+# @param old a named list to update.
+# @param new a named list of new values.
+# @param method a character string giving which parts of the list are
+#   updated. Currently allowed values are `"union"` (the default) and `"intersect"`.
+#   For `"union"` new values are added to the list.
+#   For `"intersect"` only values are updated that are present in both lists.
+# @return the updated list `old`.
 update_list <- function(old, new, method = c("union", "intersect")) {
   method <- match.arg(method)
   if (method == "union") {

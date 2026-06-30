@@ -1,20 +1,20 @@
 #' Plot Phase Parameters
 #'
-#' Visualizes a specified phase parameter within a phase list, including parameter ranges and
-#' values. Supports color-coded shading and labeling.
+#' Visualizes a specified phase parameter within a phase list, including
+#'   parameter ranges and values. Supports color-coded shading and labeling.
 #'
-#' @param variable A character string specifying the name of the parameter to plot
-#' (e.g., `"tau"`, `"eta"`).
-#' @param phaselist A list of phase data containing attributes required for plotting
-#' (e.g., `start`, `end`, `low`, `high`, `hat`).
-#' @param cols A vector of colors used for shading and lines, corresponding to the phases.
-#' Defaults to `1:length(phaselist)`.
-#' @param label Logical. If `TRUE`, adds the parameter name as a label at the top of the plot.
-#' Defaults to `TRUE`.
+#' @param variable A character string specifying the name of the parameter to
+#'   plot (e.g., `"tau"`, `"eta"`).
+#' @param phaselist A list of phase data containing attributes required for
+#'   plotting (e.g., `start`, `end`, `low`, `high`, `hat`).
+#' @param cols A vector of colors used for shading and lines, corresponding to
+#'   the phases. Defaults to `1:length(phaselist)`.
+#' @param label Logical. If `TRUE`, adds the parameter name as a label at the
+#'   top of the plot. Defaults to `TRUE`.
 #' @param ... Additional graphical parameters to pass to the `plot` function.
 #'
-#' @return Produces a plot of the specified phase parameter, including shaded areas for ranges and
-#' lines for parameter values.
+#' @return Produces a plot of the specified phase parameter, including shaded
+#'   areas for ranges and lines for parameter values.
 #'
 #' @examples
 #' \dontrun{
@@ -54,23 +54,25 @@ w_plot_phase_parameter <- function(
 
 #' Plot Phases and Associated Parameters
 #'
-#' This function visualizes phase data contained within a list, along with optional parameter
-#' plots, color-coded by phase. It supports customizable legends and layouts.
+#' This function visualizes phase data contained within a list, along with
+#'   optional parameter plots, color-coded by phase. It supports customizable
+#'   legends and layouts.
 #'
-#' @param phaselist A list containing phase data with attributes `Z` (complex numbers for
-#' positions), `time` (timestamps), and phase information.
+#' @param phaselist A list containing phase data with attributes `Z` (complex
+#'   numbers for positions), `time` (timestamps), and phase information.
 #' @param cols A vector of colors for each phase. Defaults to
-#' `gplots::rich.colors(length(phaselist))`.
-#' @param plot.parameters Logical. If `TRUE`, plots associated phase parameters. Defaults to
-#' `TRUE`.
-#' @param parameters A character vector specifying which parameters to plot (e.g.,
-#' `c("eta", "tau")`). If `NULL`, defaults to commonly used parameters found in the phase table.
-#' @param plot.legend Logical. If `TRUE`, displays a legend for phase names and models. Defaults
-#' to `TRUE`.
-#' @param legend_where Position of the legend. Options include `"bottomright"`, `"topleft"`, etc.
-#' Defaults to `"bottomright"`.
-#' @param layout Layout of parameter plots. Either `"horizontal"` or `"vertical"`. Defaults to
-#' `"horizontal"`.
+#'   `gplots::rich.colors(length(phaselist))`.
+#' @param plot.parameters Logical. If `TRUE`, plots associated phase
+#'   parameters. Defaults to `TRUE`.
+#' @param parameters A character vector specifying which parameters to plot
+#'   (e.g., `c("eta", "tau")`). If `NULL`, defaults to commonly used parameters
+#'   found in the phase table.
+#' @param plot.legend Logical. If `TRUE`, displays a legend for phase names and
+#'   models. Defaults to `TRUE`.
+#' @param legend_where Position of the legend. Options include `"bottomright"`,
+#'   `"topleft"`, etc. Defaults to `"bottomright"`.
+#' @param layout Layout of parameter plots. Either `"horizontal"` or
+#'   `"vertical"`. Defaults to `"horizontal"`.
 #'
 #' @return Generates visual plots of phases and associated parameters.
 #' @examples
@@ -90,10 +92,8 @@ w_plot_phase_list <- function(
   legend_where = "bottomright",
   layout = c("horizontal", "vertical")
 ) {
-  # Added >
   op <- par(no.readonly = TRUE)
   on.exit(par(op), add = TRUE, after = FALSE)
-  # <
 
   z <- attr(phaselist, "Z")
   time <- attr(phaselist, "time")
@@ -150,15 +150,18 @@ w_plot_phase_list <- function(
   }
 }
 
+
 #' Subset a Phase List
 #'
-#' Extracts a subset of a phase list based on the specified range and adjusts related attributes
-#' (time, time unit, and Z values) accordingly.
+#' Extracts a subset of a phase list based on the specified range and adjusts
+#'   related attributes (time, time unit, and Z values) accordingly.
 #'
-#' @param phase_list A list containing phases, including attributes `time.unit`, `time`, and `Z`.
-#' @param from Integer. The starting index for subsetting the phase list. Defaults to `1`.
-#' @param to Integer. The ending index for subsetting the phase list. Defaults to
-#' `length(phase_list)`.
+#' @param phase_list A list containing phases, including attributes `time.unit`,
+#'   `time`, and `Z`.
+#' @param from Integer. The starting index for subsetting the phase list.
+#'   Defaults to `1`.
+#' @param to Integer. The ending index for subsetting the phase list. Defaults
+#'   to `length(phase_list)`.
 #'
 #' @return A subset of the phase list, with adjusted attributes:
 #' \itemize{
@@ -169,7 +172,6 @@ w_plot_phase_list <- function(
 #'
 #' @examples
 #' \dontrun{
-#' # Example usage:
 #' subset_phase_list(your_phase_list, from = 2, to = 5)
 #' }
 subset_phase_list <- function(phase_list, from = 1, to = length(phase_list)) {

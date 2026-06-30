@@ -78,23 +78,28 @@ estimate_racvm(
 
 \item{model}{one of UCVM, RCVM, ACVM or RACVM.}
 
-\item{compare_models}{whether to compare four models: with both rotation and advection, only
-rotation, only advection, or neither.  The comparison provides a table with the log likelihood,
-number of parameters, AIC, BIC, delta AIC and delta BIC values.  A limited comparison set may be
-useful when running the fit many times (e.g. when performing change point analysis).}
+\item{compare_models}{whether to compare four models: with both rotation
+and advection, only rotation, only advection, or neither. The comparison
+provides a table with the log likelihood, number of parameters, AIC, BIC,
+delta AIC and delta BIC values. A limited comparison set may be useful
+when running the fit many times (e.g. when performing change point
+analysis).}
 
-\item{modelset}{which models to fit and compare (if \code{compare_models}) is TRUE)}
+\item{modelset}{which models to fit and compare (if
+\code{compare_models} is TRUE)}
 
-\item{p0}{optional named list of initial parameter values in the form: c(tau, eta, omega, mu.x,
-mu.y).}
+\item{p0}{optional named list of initial parameter values in the form:
+c(tau, eta, omega, mu.x, mu.y).}
 
 \item{spline}{whether to implement the spline correction on the positions}
 
-\item{spline_res}{resolution of spline (see \code{\link[smoove]{getV.spline}})}
+\item{spline_res}{resolution of spline (see
+\code{\link[smoove]{getV.spline}})}
 
 \item{t_spline}{new times for spline estimation (best left as NULL)}
 
-\item{time_units}{time units of calculations (e.g. "secs", "mins", "hours", "days")}
+\item{time_units}{time units of calculations (e.g. "secs", "mins",
+"hours", "days")}
 
 \item{verbose}{whether to output verbose message. defaults to FALSE#'}
 }
@@ -102,12 +107,14 @@ mu.y).}
 Estimate rotational-advectice correlated velocity movement model
 }
 \details{
-This group of functions estimate the parameters of a rotational and advective CVM using a
-one-step velocity likelihood.  It is best implemented on relatively high resolution data from
-which one can obtain good estimates of velocity.  The observations can, however, be irregularly
-sampled.
+This group of functions estimate the parameters of a rotational and
+  advective CVM using a one-step velocity likelihood. It is best
+  implemented on relatively high resolution data from which one can obtain
+  good estimates of velocity. The observations can, however, be irregularly
+  sampled.
 
-The parameterization is: \eqn{\tau} - characteristic time scale, \eqn{\mu} - advective velocity,
+The parameterization is: \eqn{\tau} - characteristic time scale,
+  \eqn{\mu} - advective velocity,
 \eqn{\eta} - random rms speed, \eqn{\omega} - angular speed.
 
 The \code{fitRACVM} function is an (internal) helper function.

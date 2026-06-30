@@ -37,7 +37,7 @@ expect_equal(ths$args$r1, 10)
 expect_equal(ths$args$min_size, 2L)
 expect_equal(ths$args$min_staying_time, 300L)
 expect_equal(ths$args$max_time_between, 86400L)
-expect_equal(ths$args$stop_id_col, "stop_id")
+expect_equal(ths$args$output_col, "stop_id")
 
 ths_custom <- threshold_stops(r1 = 25, min_size = 5L)
 expect_equal(ths_custom$args$r1, 25)

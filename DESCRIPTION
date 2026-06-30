@@ -8,11 +8,11 @@ Authors@R: c(
     person("Katrina", "Brock", email = "kbrock@ab.mpg.de", role = "aut"))
 Description: More about what it does (maybe more than one line).
 License: GPL (>= 2)
-Imports: checkmate, sf, smoove, gplots, scales, intervals
+Imports: checkmate, sf, smoove, gplots, scales, intervals, lubridate
 Depends: R (>= 4.4.0), zoo, trackframe (>= 0.1.6), generics
 Suggests: tinytest, move2, sftrack, knitr, markdown, infostop (>= 0.1.1), cpt (>= 2.0.0)
 Remotes: EliGurarie/smoove
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0

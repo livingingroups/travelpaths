@@ -17,10 +17,11 @@
 #' creating new travelpath specification objects. This function is used
 #' internally by user-facing specification functions.
 #'
-#' @param cls a character string for the class of the specification (e.g., "stop_detection").
+#' @param cls a character string for the class of the specification (e.g.,
+#'   "stop_detection").
 #' @param args a list of main arguments for the specification.
-#' @param eng_args a list of engine-specific arguments, will be typically an empty `list()` or
-#' `NULL` when creating a new specification.
+#' @param eng_args a list of engine-specific arguments, typically an empty
+#'   `list()` or `NULL` when creating a new specification.
 #' @param mode a character string for the type of travel path analysis.
 #'   Possible values are "segmentation" or "grouping" or "unknown".
 #' @param engine a character string for the computational engine.
@@ -90,17 +91,17 @@ new_travelpath_spec <- function(cls, args, eng_args, mode, engine) {
 #' Update a travelpath specification object
 #'
 #' Update the parameters of a travelpath specification object with new values.
-#' This function allows you to modify the arguments and engine-specific arguments
-#' of an existing travelpath specification.
+#' This function allows you to modify the arguments and engine-specific
+#' arguments of an existing travelpath specification.
 #'
 #' @param object A travelpath specification object to be updated.
 #' @param params A named list of parameters to update. The function will
-#'   automatically determine which parameters are main arguments vs engine-specific
-#'   arguments based on the specification's formal arguments.
+#'   automatically determine which parameters are main arguments vs
+#'   engine-specific arguments based on the specification's formal arguments.
 #' @param fresh A logical value indicating whether to start with fresh default
 #'   values (`TRUE`) or preserve existing parameter values (`FALSE`, default).
-#'   When `TRUE`, only the parameters specified in `params` will be set, all others
-#'   will revert to defaults.
+#'   When `TRUE`, only the parameters specified in `params` will be set, all
+#'   others will revert to defaults.
 #' @param ... Additional named parameters to update. These will be combined with
 #'   the `params` list.
 #'
@@ -120,8 +121,8 @@ update.travelpath_spec <- function(object, params = list(), fresh = FALSE, ...) 
 #' Extract arguments from an object
 #'
 #' This method extracts the formal arguments of an object.
-#' For objects of `travelpath_spec` extracts the formal arguments of the fitting function
-#' associated with a travelpath specification object.
+#' For objects of `travelpath_spec` extracts the formal arguments of the
+#' fitting function associated with a travelpath specification object.
 #'
 #' @param x an object.
 #' @param ... additional arguments (currently unused).

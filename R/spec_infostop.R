@@ -15,7 +15,8 @@
 #'
 #' @param mode a character vector of length one, for the type of model. The only
 #'   possible value for this model is "stops".
-#' @param engine a character vector of length one, specifying what computational engine
+#' @param engine a character vector of length one, specifying what
+#'   computational engine
 #'   to use for fitting. Possible engines are listed below. The default for this
 #'   model is `"infostop"`.
 #' @param r1 A positive numeric value giving the maximum distance between
@@ -29,17 +30,8 @@
 #' @param max_time_between A positive integer giving the maximum duration
 #'   (in seconds) between consecutive points to consider them part of the
 #'   same stop. Only relevant if timestamps are provided.
-#' @param output_col a character vector of length one, specifying the name of the
-#'   column to be used for the stop identifiers. Default is "stop_id".
-#'
-#' @details
-#'
-#' ## What does it mean to predict?
-#'
-#' For a threshold-based stop detection model, stops are identified by grouping
-#' consecutive points that meet the distance and time criteria. Therefore,
-#' prediction in travelpaths assigns stop identifiers to movement trajectory
-#' points based on these threshold conditions.
+#' @param output_col a character vector of length one, specifying the name of
+#'   the column to be used for the stop identifiers. Default is "stop_id".
 #'
 #' @return A `threshold_stops` specification.
 #'
@@ -66,7 +58,7 @@ threshold_stops <- function(
     min_size = min_size,
     min_staying_time = min_staying_time,
     max_time_between = max_time_between,
-    stop_id_col = output_col
+    output_col = output_col
   )
   new_travelpath_spec(
     "threshold_stops",
@@ -142,7 +134,7 @@ infomap <- function(
     weighted = weighted,
     weight_exponent = weight_exponent,
     stop_id_col = stop_id_col,
-    site_id_col = output_col
+    output_col = output_col
   )
   new_travelpath_spec(
     "infomap",

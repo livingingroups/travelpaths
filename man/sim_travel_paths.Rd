@@ -19,41 +19,44 @@ sim_travel_paths(
 \arguments{
 \item{ntracks}{An integer specifying the number of tracks to generate.}
 
-\item{sizes}{An integer vector specifying the number of points for each track. If a single value
-is provided, it will be repeated for all tracks.}
+\item{sizes}{An integer vector specifying the number of points for each
+track. If a single value is provided, it will be repeated for all tracks.}
 
-\item{max_step}{A numeric value specifying the maximum step size for random movements.
-Default is 0.001 (approximately 100m at the equator).}
+\item{max_step}{A numeric value specifying the maximum step size for random
+movements. Default is 0.001 (approximately 100m at the equator).}
 
-\item{time_increment}{A numeric giving the time between consecutive points in seconds.
-Default is 60 (1 minute).}
+\item{time_increment}{A numeric giving the time between consecutive points
+in seconds. Default is 60 (1 minute).}
 
-\item{start_location}{A numeric vector giving the starting location as c(easting, northing).
-Default is Vienna (16.3725042, 48.2083537)}
+\item{start_location}{A numeric vector giving the starting location as
+c(easting, northing). Default is Vienna (16.3725042, 48.2083537)}
 
-\item{start_time}{A POSIXct giving the starting time for the paths. Default is current time.}
+\item{start_time}{A POSIXct giving the starting time for the paths. Default
+is current time.}
 
-\item{stay_prob}{A numeric between 0 and 1 giving the probability of staying at the
-same location. Default is 0.2.}
+\item{stay_prob}{A numeric between 0 and 1 giving the probability of staying
+at the same location. Default is 0.2.}
 
-\item{track_prefix}{A character string used as a prefix for track IDs. Default is "track".
-Track IDs will be formatted as \code{prefix\_number}.}
+\item{track_prefix}{A character string used as a prefix for track IDs.
+Default is "track". Track IDs will be formatted as \code{prefix\_number}.}
 
-\item{format}{A character string, either \code{"trackframe"} (easting/northing),
-\code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.}
+\item{format}{A character string, either \code{"trackframe"}
+(easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"}
+or \code{"move2"}.}
 }
 \value{
 Depending on the format argument either a \code{"trackframe"} or
- \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or \code{"move2"}.
+  \code{"data.frame"} or \code{"matrix"} or \code{"sftrack"} or
+  \code{"move2"}.
 }
 \description{
-This function creates multiple random travel paths and combines them into a single object.
-Each path is assigned coordinates (easting/northing for format trackframe and northing/easting
-else) and time values and a unique track ID.
-Each path can include stationary periods and movements with configurable parameters.
-The following output formats are supported:
-\code{"trackframe"} (easting/northing), \code{"data.frame"}, \code{"matrix"}, \code{"sftrack"} or
-\code{"move2"}.
+This function creates multiple random travel paths and combines them into
+  a single object. Each path is assigned coordinates (easting/northing for
+  format trackframe and northing/easting else) and time values and a unique
+  track ID. Each path can include stationary periods and movements with
+  configurable parameters. The following output formats are supported:
+  \code{"trackframe"} (easting/northing), \code{"data.frame"},
+  \code{"matrix"}, \code{"sftrack"} or \code{"move2"}.
 }
 \examples{
 # Generate 3 tracks with different sizes
