@@ -1,0 +1,54 @@
+# Package index
+
+## All functions
+
+- [`arguments()`](arguments.md) : Extract arguments from an object
+- [`augment.travelpath_fit`](augment.travelpath_fit.md) : Augment a
+  Trackframe with the Fit Output
+- [`change_point_permtest()`](change_point_permtest.md) : Change Point
+  Permutation Test Specification
+- [`cvm_change_points()`](cvm_change_points.md) : Find Change Points
+- [`diagnose_crw()`](diagnose_crw.md) : Autorcorrelation
+- [`elapsed()`](elapsed.md) : Extract Elapsed Time
+- [`estimate_racvm()`](estimate_racvm.md) : Estimate RACVM parameters
+- [`estimate_ucvm()`](estimate_ucvm.md) : Estimating parameters of
+  unbiased CVM
+- [`find_single_break_point()`](find_single_break_point.md) : Find
+  single change point
+- [`fit(`*`<travelpath_spec>`*`)`](fit.travelpath_spec.md) : Fit a
+  Travelpath Model Specification
+- [`fitted(`*`<travelpath_fit>`*`)`](fitted.travelpath_fit.md) : Extract
+  Fit
+- [`infomap()`](infomap.md) : Infomap Site Identification
+- [`n_segments()`](n_segments.md) [`n_groups()`](n_segments.md) :
+  Accessor Functions for Segments and Groups
+- [`new_travelpath_fit()`](new_travelpath_fit.md) : Travelpath Fit
+- [`new_travelpath_spec()`](new_travelpath_spec.md) : Constructor for
+  travelpath specification objects
+- [`plot_phases()`](plot_phases.md) : Plot Phases
+- [`register_argument_mapping()`](register_argument_mapping.md) :
+  Register an argument mapping for a model specification
+- [`register_fit_function()`](register_fit_function.md) : Register a new
+  fit function
+- [`segment_col()`](segment_col.md) [`group_col()`](segment_col.md) :
+  Accessor Functions to Obtain Segment / Group Column
+- [`segment_meta()`](segment_meta.md) [`group_meta()`](segment_meta.md)
+  : Metadata from a segmentation / grouping fit
+- [`sim_travel_path()`](sim_travel_path.md) : Generate Random Travel
+  Path
+- [`sim_travel_paths()`](sim_travel_paths.md) : Generate Multiple Random
+  Travel Paths
+- [`specification()`](specification.md) : Specification Accessor
+  Function
+- [`subset_phase_list()`](subset_phase_list.md) : Subset a Phase List
+- [`summarize_phases()`](summarize_phases.md) : Summarize phases
+- [`sweep_racvm()`](sweep_racvm.md) : Sweep RACVM
+- [`test_cp()`](test_cp.md) : Test RACVM change point
+- [`threshold_stops()`](threshold_stops.md) : Threshold-based Stop
+  Detection
+- [`update(`*`<travelpath_spec>`*`)`](update.travelpath_spec.md) :
+  Update a travelpath specification object
+- [`w_plot_phase_list()`](w_plot_phase_list.md) : Plot Phases and
+  Associated Parameters
+- [`w_plot_phase_parameter()`](w_plot_phase_parameter.md) : Plot Phase
+  Parameters

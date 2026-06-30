@@ -1,0 +1,8 @@
+pandoc: 3.8.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  extending_travelpaths: extending_travelpaths.html
+  smoove: smoove.html
+  travelpaths: travelpaths.html
+last_built: 2026-06-30T13:50Z
