@@ -11,7 +11,10 @@ License: GPL (>= 2)
 Imports: checkmate, sf, smoove, gplots, scales, intervals, lubridate
 Depends: R (>= 4.4.0), zoo, trackframe (>= 0.1.6), generics
 Suggests: tinytest, move2, sftrack, knitr, markdown, infostop (>= 0.1.1), cpt (>= 2.0.0)
-Remotes: EliGurarie/smoove, livingingroups/trackframe, livingingroups/infostopR, livingingroups/changepointpermtest2009
+Remotes: EliGurarie/smoove,
+    livingingroups/trackframe,
+    infostop=livingingroups/infostopR,
+    cpt=livingingroups/changepointpermtest2009
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
