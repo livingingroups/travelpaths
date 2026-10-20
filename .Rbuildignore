@@ -11,6 +11,7 @@ Taskfile.yml
 ^pkgdown$
 ^Meta$
 .quarto/
+^\.github$
 .gitignore
 .lintr
 ^doc$

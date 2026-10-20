@@ -62,15 +62,17 @@
 
 
 .infostop_identify_sites_meta <- function(data, site_id_col) {
-  cols <- c(site_id_col, "easting", "northing")
+  e_col <- easting_col(data)
+  n_col <- northing_col(data)
+  cols <- c(site_id_col, e_col, n_col)
   site_data <- data[!is.na(data[[site_id_col]]), cols]
   splitted <- split(site_data, site_data[[site_id_col]])
   site_id <- unlist(lapply(splitted, function(x) head(x[[site_id_col]], 1)))
   site_data <- data.frame(
     id = site_id,
     n_points = as.integer(lapply(splitted, NROW)),
-    easting = as.numeric(lapply(splitted, function(x) mean(x[["easting"]]))),
-    northing = as.numeric(lapply(splitted, function(x) mean(x[["northing"]])))
+    easting = as.numeric(lapply(splitted, function(x) mean(x[[e_col]]))),
+    northing = as.numeric(lapply(splitted, function(x) mean(x[[n_col]])))
   )
   colnames(site_data)[1L] <- site_id_col
   meta <- list(

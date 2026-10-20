@@ -1,3 +1,44 @@
+assert_format_available <- function(format, prefix = "") {
+  choices <- c("trackframe", "data.frame", "matrix", "sftrack", "move2")
+  checkmate::assert_choice(format, choices = choices)
+
+  package <- intersect(format, c("sftrack", "move2"))
+  if (length(package) > 0L && !is_pkg_installed(package)) {
+    fmt <- "%spackage '%s' is required when format '%s' is chosen."
+    stop(paste(sprintf(fmt, prefix, package, format), "Please install it."), call. = FALSE)
+  }
+
+  invisible(TRUE)
+}
+
+
+as_travel_path <- function(data, format, crs = "EPSG:32632") {
+  if (format == "matrix") {
+    data[["id"]] <- as.integer(as.factor(data[["id"]]))
+    data[["time"]] <- as.integer(data[["time"]])
+    return(as.matrix(data))
+  }
+
+  if (format == "sftrack" || format == "move2") {
+    if (format == "sftrack") {
+      return(sftrack::as_sftrack(data, coords = c("easting", "northing"), crs = crs))
+    }
+    return(move2::mt_as_move2(
+      data,
+      coords = c("easting", "northing"),
+      time_column = "time",
+      track_id_column = "id",
+      crs = crs
+    ))
+  }
+
+  if (format == "trackframe") {
+    return(as.trackframe(data, crs = crs))
+  }
+
+  data
+}
+
 #' Generate Random Travel Path
 #'
 #' This function generates a random travel path with coordinates
@@ -44,10 +85,7 @@ sim_travel_path <- function(
   checkmate::assert_posixct(start_time, any.missing = FALSE)
   checkmate::assert_numeric(stay_prob, lower = 0, upper = 1, len = 1, any.missing = FALSE)
   format <- match.arg(format)
-  if (format %in% c("sftrack", "move2") && !is_pkg_installed(format)) {
-    fmt <- "'sim_travel_path' requires the package '%s' when format '%s' is chosen."
-    stop(paste(sprintf(fmt, format, format), "Please install it.", collapse = " "))
-  }
+  assert_format_available(format, "in 'sim_travel_path' ")
   projected_crs <- "EPSG:32632"
 
   path <- data.frame(
@@ -56,11 +94,11 @@ sim_travel_path <- function(
     easting = numeric(size)
   )
 
-  path$time[1] <- start_time
-  path$easting[1] <- start_location[1]
-  path$northing[1] <- start_location[2]
+  path[["time"]][1] <- start_time
+  path[["easting"]][1] <- start_location[1]
+  path[["northing"]][1] <- start_location[2]
 
-  for (i in 2:size) {
+  for (i in seq.int(2, size)) {
     if (runif(1) < stay_prob) {
       path$easting[i] <- path$easting[i - 1]
       path$northing[i] <- path$northing[i - 1]
@@ -78,45 +116,8 @@ sim_travel_path <- function(
     }
   }
 
-  if (format == "matrix") {
-    path$id <- 1
-    path$time <- as.integer(path$time)
-    return(as.matrix(path))
-  } else if (format == "sftrack") {
-    data <- cbind(path, "id" = "track_1")
-    return(sftrack::as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs))
-  } else if (format == "move2") {
-    data <- cbind(path, "id" = "track_1")
-    return(move2::mt_as_move2(
-      data,
-      coords = c("easting", "northing"),
-      time_column = "time",
-      track_id_column = "id",
-      crs = projected_crs
-    ))
-  } else if (format == "trackframe") {
-    data <- cbind(path, "id" = "track_1")
-    # FIXME: The dependencies are here wrong! Why should we need sftrack if we choose trackframe!
-    as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
-    if (inherits(as_sftrack, "try-error")) {
-      stop("package 'sftrack' is required for this function. Please install it.")
-    }
-    data <- as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs)
-    data_tf <- as.trackframe(
-      data = data,
-      time_col = "time",
-      easting_col = "easting",
-      northing_col = "northing"
-    )
-
-    data_tf[["sft_group"]] <- NULL
-    data_tf[["id"]] <- "track_1"
-    data_tf[["geometry"]] <- NULL
-    return(data_tf)
-  } else {
-    data <- cbind(path, "id" = "track_1")
-    return(data)
-  }
+  data <- cbind(path, "id" = "track_1")
+  as_travel_path(data, format = format, crs = projected_crs)
 }
 
 
@@ -188,10 +189,7 @@ sim_travel_paths <- function(
   checkmate::assert_posixct(start_time, any.missing = FALSE)
   checkmate::assert_numeric(stay_prob, lower = 0, upper = 1, len = 1, any.missing = FALSE)
   format <- match.arg(format)
-  if (format %in% c("sftrack", "move2") && !is_pkg_installed(format)) {
-    fmt <- "'sim_travel_path' requires the package '%s' when format '%s' is chosen."
-    stop(paste(sprintf(fmt, format, format), "Please install it.", collapse = " "))
-  }
+  assert_format_available(format, "in 'sim_travel_paths' ")
   projected_crs <- "EPSG:32632"
 
   total_size <- sum(sizes)
@@ -222,42 +220,5 @@ sim_travel_paths <- function(
     start <- end + 1L
   }
 
-  # FIXME: Duplicated code see function sim_travel_path!
-  if (format == "matrix") {
-    data[["id"]] <- as.integer(as.factor(data[["id"]]))
-    data[["time"]] <- as.integer(data[["time"]])
-    return(as.matrix(data))
-  } else if (format == "sftrack") {
-    return(sftrack::as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs))
-  } else if (format == "move2") {
-    return(move2::mt_as_move2(
-      data,
-      coords = c("easting", "northing"),
-      time_column = "time",
-      track_id_column = "id",
-      crs = projected_crs
-    ))
-  } else if (format == "trackframe") {
-    as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
-    # FIXME: The dependencies are here wrong! Why should we need sftrack if we choose trackframe!
-    if (inherits(as_sftrack, "try-error")) {
-      stop("package 'sftrack' is required for this function. Please install it.")
-    }
-    data <- as_sftrack(data, coords = c("easting", "northing"), crs = projected_crs)
-
-    data_tf <- as.trackframe(
-      data = data,
-      time_col = "time",
-      easting_col = "easting",
-      northing_col = "northing"
-    )
-
-    data_tf[["sft_group"]] <- NULL
-    data_tf[["id"]] <- data[["id"]]
-    data_tf[["geometry"]] <- NULL
-
-    return(data_tf)
-  } else {
-    return(data)
-  }
+  as_travel_path(data, format = format, crs = projected_crs)
 }
