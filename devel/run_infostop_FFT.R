@@ -1,120 +1,73 @@
-# install
-# infostop:::conda_install_infostop() #FIXME
-
-
-# # load packages
-# python_exe <- normalizePath("~/.conda/envs/infostop/bin/python")
-# Sys.setenv(RETICULATE_PYTHON = python_exe)
-# Sys.setenv(INFOSTOP_PYTHON = python_exe)
-
-library("infostop")
+library("travelpaths")
 library("trackframe")
 
-infostop_initialize()
+fft_file <- normalizePath("~/travel_paths/travel_paths/data/FFT.csv")
+fft <- read.csv(fft_file)
+fft$timestamp <- as.POSIXct(fft$timestamp, tz = "UTC")
+cols <- c(
+  "timestamp", "utm.easting", "utm.northing",
+  "individual.local.identifier", "tag.local.identifier"
+)
+fft <- fft[, cols]
+fft_abby <- fft[
+  which(with(fft, individual.local.identifier == "Abby" & tag.local.identifier == 4652)),
+]
+dim(fft_abby)
 
-# set wd as path folder
-setwd("~/travelpaths-devel/pkgs/travelpaths/devel")
-
-# load data
-FFT <- read.csv(file.path("..", "..", "..", "data", "FFT.csv"))
-
-FFT$timestamp <- as.POSIXct(FFT$timestamp)
-FFT_tf_lon_lat <- as.trackframe(FFT,
-                         time_col  = "timestamp",
-                         easting_col = "location.lat", #"utm.easting",
-                         northing_col = "location.long",#"utm.northing",
-                         id_col = "individual.local.identifier"
+tf <- as.trackframe(
+  fft_abby,
+  time_col = "timestamp",
+  easting_col = "utm.easting",
+  northing_col = "utm.northing",
+  id_col = "individual.local.identifier",
+  crs = "EPSG:32617"
 )
 
-FFT_tf <- as.trackframe(FFT,
-                         time_col  = "timestamp",
-                         easting_col = "utm.easting", #"utm.easting",
-                         northing_col = "utm.northing",#"utm.northing",
-                         id_col = "individual.local.identifier"
+stops_spec <- threshold_stops(
+  r1 = 10,
+  min_staying_time = 300L,
+  max_time_between = 86400L
 )
-class(FFT_tf$timestamp)
+sites_spec <- infomap(r2 = 10)
 
-# FFT_tf_abby <- select_id(tf = FFT_tf, id = "Abby")
-FFT_tf_abby <- dplyr::filter(FFT_tf, individual.local.identifier == "Abby", tag.local.identifier == 4652)
-FFT_tf_abby_lon_lat <- dplyr::filter(FFT_tf_lon_lat, individual.local.identifier == "Abby", tag.local.identifier == 4652)
-# FFT_tf_abby <- select_id(tf = FFT_tf, id = c("Abby", "4652"))
-dim(FFT_tf_abby)
+stops <- fit(stops_spec, tf)
+tf <- augment(stops, tf)
+head(tf)
 
-tf <- FFT_tf_abby
-tf_lon_lat <- FFT_tf_abby_lon_lat
+sites <- fit(sites_spec, tf)
+class(sites)
 
-# onestep
-mod_lon_lat <- infostop(tf_lon_lat, distance_metric = "haversine")
-mod <- infostop(tf, distance_metric = "euclidean")
-mod
+# The fitted engine objects remain available through `fitted()`.
+sites
 
-# twostep
-stops <- find_stops(tf_lon_lat, r1 = 10, min_staying_time = 300L, max_time_between = 86400L, distance_metric = "haversine")
-twostep <- spatial_infomap(stops[['coordinates']], r2 = 10, distance_metric = "haversine")
-
-stops <- find_stops(tf, r1 = 10, min_staying_time = 300L, max_time_between = 86400L, distance_metric = "euclidean")
-twostep <- spatial_infomap(stops[['coordinates']], r2 = 10, distance_metric = "euclidean")
-
-mod$compute_label_medians()
-
-
-stops$compute_label_medians()
-
-# map <- plot_map(mod)
-map <- plot_map(mod,  # only available for distance "haversine" (lonlat)
-                scatter = TRUE, 
-                polygons_color = "#ff0000", 
-                zoom_start = 15)
-
-map <- plot_map(mod_lon_lat, 
-                scatter = TRUE, 
-                polygons_color = "#ff0000", 
-                zoom_start = 15)
-
-## Not run: 
-# map$show_in_browser()
-map$save("map_lon_lat.html")
-
-
-#TODO write accessor functions
-py_dir <- reticulate::py_eval("dir", FALSE)
-reticulate::py_to_r(py_dir(mod$model))
-
-# number of raw points
+# Inspect results through the travelpaths accessors.
 dim(tf)[1]
-# 15729
+dim(fitted(stops))[1]
+n_segments(stops)
+head(segment_meta(stops))
 
+dim(fitted(sites))[1]
+n_groups(sites)
+group_meta(sites)
 
-# dim(mod$`_stat_coords`)[1]
-dim(mod$model$`_stat_coords`)[1]
-# 1268
+# Attach site labels to the original trackframe.
+tf_result <- augment(sites, tf)
+head(tf_result)
 
-# number of stop locations
-labels <- mod$labels
-length(unique(labels)) - 1
-# 179
+# Plot only fixes assigned to a site. Mapping the full trackframe is too
+# dense because it includes all non-site fixes and their connecting paths.
+tf_result_sites <- tf_result[!is.na(tf_result[["site_id"]]), ]
+map_utm <- plot_map(tf_result_sites, group_col = "site_id", scatter = TRUE)
+htmlwidgets::saveWidget(map_utm, "/tmp/fft_sites_utm.html", selfcontained = TRUE)
 
-dim(mod$model$`_stat_labels`)[1]
-
-cbind(labels, do.call(rbind, mod$model$`_data`))
-
-mod$compute_label_medians()
-
-labels
-
-print(mod)
-
-mod$model$`_stat_coords`
-
-
-mod
-
-attributes(tf_lon_lat)
-simod <- spatial_infomap(tf_lon_lat, distance_metric = "haversine")
-simod <- spatial_infomap(tf, distance_metric = "euclidean")
-simod$labels
-
-
-length(mod$labels)
-intervals <- compute_intervals(mod$labels, as.integer(time(tf)))
-intervals
+# The longitude/latitude trackframe is only used for haversine calculations.
+# Convert it to sf explicitly before mapping. Its easting/northing columns
+# contain latitude/longitude respectively, so reverse them for sf coordinates.
+tf_lon_lat_stops_sf <- sf::st_as_sf(
+  as.data.frame(tf_lon_lat_stops),
+  coords = c("northing", "easting"),
+  crs = 4326,
+  remove = FALSE
+)
+map_lon_lat <- plot_map(tf_lon_lat_stops_sf, group_col = "stop_id", scatter = TRUE)
+htmlwidgets::saveWidget(map_lon_lat, "/tmp/fft_stops_lon_lat.html", selfcontained = TRUE)

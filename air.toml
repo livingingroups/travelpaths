@@ -4,6 +4,6 @@ indent-width = 2
 indent-style = "space"
 line-ending = "lf"
 persistent-line-breaks = true
-exclude = []
+exclude = ["devel"]
 default-exclude = true
 skip = []
